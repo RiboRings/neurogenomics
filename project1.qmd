@@ -1,0 +1,169 @@
+---
+title: "Project 1"
+format: html
+editor: visual
+---
+
+```{r}
+knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+```
+
+
+# Part 1
+
+Next-Generation Sequencing (NGS) entails several high-throughput techniques
+that generate big amount of data. The main two approaches involve long-read
+sequencing with nanopore technology and short-read sequencing with an Illumina
+machine. In the latter case, Polymerase Chain Reaction (PCR) is performed
+by the sequencer to amplify the library and quantify gene expression. However,
+this process introduces different types of errors due to stochasticity and
+mutation that make it impossible to deduce the absolute gene expression,
+especially for low-copy genes. Instead, sequencing data provides a compositional
+measure of gene expression, where every observation (or gene) is quantified
+in relation with the rest of the pool. Thus, it is essential to normalise reads
+from different samples when drawing between-sample comparisons.
+
+# Part 2
+
+```{r}
+# Import package
+library(pasilla)
+```
+
+```{r}
+# Load data
+pasCts <- system.file("extdata", "pasilla_gene_counts.tsv",
+                      package = "pasilla", mustWork = TRUE)
+
+pasAnno <- system.file("extdata", "pasilla_sample_annotation.csv",
+                       package="pasilla", mustWork = TRUE)
+
+cts <- as.matrix(read.csv(pasCts, sep = "\t", row.names = "gene_id"))
+
+coldata <- read.csv(pasAnno, row.names = 1)
+coldata <- coldata[ , c("condition", "type")]
+
+rownames(coldata) <- sub("fb", "", rownames(coldata))
+cts <- cts[, rownames(coldata)]
+```
+
+The matrix `cts` contains the gene expression data in terms of the number of
+reads for `r nrow(cts)` genes from `r ncol(cts)` samples.
+
+```{r}
+# View head of counts assay
+head(cts)
+```
+```{r}
+# Store assay dimensions
+mat_dim <- dim(cts)
+# View assay dimensions
+mat_dim
+```
+Samples differ from one another in the library size. Therefore, read counts
+should be normalised.
+
+```{r}
+# View raw library sizes
+colSums(cts)
+```
+
+Normalisation is performed by dividing the reads from every sample by the
+corresponding library size and multiplying by the library size of the first
+sample.
+
+```{r}
+# Normalise all samples to library size of first sample
+norm_cts <- apply(cts, 2, function(col) col / sum(col) * sum(cts[ , 1]))
+# Check normalised library sizes
+colSums(norm_cts)
+```
+
+# Part 3
+
+```{r}
+find_log_stats <- function(assay) {
+  
+  # Compute row means and vars
+  control_means <- rowMeans(assay)
+  control_vars <- rowVars(assay)
+
+  # Take log of means and vars with pseudocount
+  control_log_means <- log(control_means + 1)
+  control_log_vars <- log(control_vars + 1)
+
+  # Combine data into a data.frame
+  df <- data.frame(Var = control_log_vars, Mean = control_log_means)
+  return(df)
+}
+```
+
+```{r}
+# Subset data to untreated samples
+control_cts <- norm_cts[ , grep("^untreated", colnames(norm_cts))]
+# Find log means and vars for genes in control samples
+control_stats <- find_log_stats(control_cts)
+```
+
+The Poisson distribution fits the data relatively well for lower numbers of
+reads, but it creates bias for higher numbers of reads where the variance
+becomes larger than the mean. Such phenomenon is called *overdispersion*.
+
+```{r}
+# Visualise fit of Poisson distribution to data
+plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars")
+abline(a = 0, b = 1, col = "red")
+legend("topleft", "Poisson Fit", lty = 1, col = "red")
+```
+
+```{r}
+# Fit dispersion coefficient of negative binomial distribution to data
+nls_fit <- nls(Var ~ Mean + a * Mean^2, data = control_stats, start = list(a = 0))
+summary(nls_fit)
+```
+
+Unlike the Poisson distribution, the negative binomial distribution fits well
+the data both for lower and higher numbers of reads.
+
+```{r}
+# Define var-mean relationship of negative binomial distribution
+disper_coef <- summary(nls_fit)$coefficients["a", "Estimate"]
+neg_binom <- function(x) x + disper_coef * x^2
+
+# Visualise fit of negative binomial distribution to data
+plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars")
+curve(neg_binom, col = "red", add = TRUE)
+legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
+```
+
+```{r}
+# Subset data to treated samples
+treated_cts <- norm_cts[ , grep("^treated", colnames(norm_cts))]
+# Find log means and vars for genes in treated samples
+treated_stats <- find_log_stats(treated_cts)
+```
+
+```{r}
+# Visualise fit of Poisson distribution to data
+plot(control_stats$Mean, treated_stats$Var, xlab = "Log Means", ylab = "Log Vars")
+abline(a = 0, b = 1, col = "red")
+legend("topleft", "Poisson Fit", lty = 1, col = "red")
+```
+
+```{r}
+# Fit dispersion coefficient of negative binomial distribution to data
+nls_fit <- nls(Var ~ Mean + a * Mean^2, data = treated_stats, start = list(a = 0))
+summary(nls_fit)
+```
+
+```{r}
+# Define var-mean relationship of negative binomial distribution
+disper_coef <- summary(nls_fit)$coefficients["a", "Estimate"]
+neg_binom <- function(x) x + disper_coef * x^2
+
+# Visualise fit of negative binomial distribution to data
+plot(treated_stats$Mean, treated_stats$Var, xlab = "Log Means", ylab = "Log Vars")
+curve(neg_binom, col = "red", add = TRUE)
+legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
+```
+
