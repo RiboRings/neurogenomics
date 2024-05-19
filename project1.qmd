@@ -16,13 +16,23 @@ sequencing with nanopore technology and short-read sequencing with an Illumina
 machine. In the latter case, Polymerase Chain Reaction (PCR) is performed
 by the sequence to amplify the library and quantify gene expression. 
 
-In the ideal situation, we would expect to have a doubling of each RNA strand in a linear fashion, 
-so that each molecule is duplicated and the ratio between the expression levels of the different genes is maintained.
-However, this process introduces different types of errors due to factors such as the composition of the sequence (for example high fraction of G or C) or the secondary structure, stochasticity and mutation that make it impossible to deduce the absolute gene expression, especially for low-copy genes.
+In the ideal situation, we would expect to have a doubling of each RNA strand in
+a linear fashion,  so that each molecule is duplicated and the ratio between the
+expression levels of the different genes is maintained. However, this process
+introduces different types of errors due to factors such as the composition of
+the sequence (for example high fraction of G or C) or the secondary structure,
+stochasticity and mutation that make it impossible to deduce the absolute gene
+expression, especially for low-copy genes.
 
-In addition, the sequencing process involves breaking the mRNA sequence into several pieces because the machine cannot sequence a full-length genome. Thus, multiple sequences may originate from the same sequence, so we may think there are several copies of the same gene, but in reality it is one broken copy. Therefore, we may infer a wrong expression level. Instead, sequencing data provides a compositional measure of gene expression, where every observation (or gene) is quantified
-in relation with the rest of the pool. Thus, it is essential to normalise reads from different samples when drawing between-sample comparisons.
-
+In addition, the sequencing process involves breaking the mRNA sequence into
+several pieces because the machine cannot sequence a full-length genome. Thus,
+multiple sequences may originate from the same sequence, so we may think there
+are several copies of the same gene, but in reality it is one broken copy.
+Therefore, we may infer a wrong expression level. Instead, sequencing data
+provides a compositional measure of gene expression, where every observation
+(or gene) is quantified in relation with the rest of the pool. Thus, it is
+essential to normalise reads from different samples when drawing between-sample
+comparisons.
 
 # Part 2 - Ready! 
 
