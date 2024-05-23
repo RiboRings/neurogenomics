@@ -8,7 +8,7 @@ editor: visual
 knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 ```
 
-# Part 1 - Ready!
+# Part 1
 
 Next-Generation Sequencing (NGS) entails several high-throughput techniques
 that generate big amount of data. The main two approaches involve long-read
@@ -34,12 +34,16 @@ provides a compositional measure of gene expression, where every observation
 essential to normalise reads from different samples when drawing between-sample
 comparisons.
 
-# Part 2 - Ready! 
+# Part 2
+
+The package with the data of interest is imported.
 
 ```{r}
 # Import package
 library(pasilla)
 ```
+
+RNA-Seq data from Drosophila melanogaster is loaded from the package.
 
 ```{r}
 # Load data
@@ -57,6 +61,7 @@ coldata <- coldata[ , c("condition", "type")]
 rownames(coldata) <- sub("fb", "", rownames(coldata))
 cts <- cts[, rownames(coldata)]
 ```
+
 The matrix `cts` contains the gene expression data in terms of the number of
 reads for `r nrow(cts)` genes from `r ncol(cts)` samples.
 
@@ -64,6 +69,9 @@ reads for `r nrow(cts)` genes from `r ncol(cts)` samples.
 # View head of counts assay
 head(cts, 10)
 ```
+
+Dimensions of the counts assay can be retrieved with the `dim` function.
+
 ```{r}
 # Store assay dimensions
 mat_dim <- dim(cts)
@@ -91,22 +99,29 @@ colSums(norm_cts)
 
 # Part 3
 
+A function to compute log means an variances for every feature in an assay is
+defined below, so that the same workflow can be applied both to untreated and
+treated samples.
+
 ```{r}
+# Define function to compute feature-wise log means and vars
 find_log_stats <- function(assay) {
   
   # Compute row means and vars
-  control_means <- rowMeans(assay)
-  control_vars <- rowVars(assay)
+  gene_means <- rowMeans(assay)
+  gene_vars <- rowVars(assay)
 
   # Take log of means and vars with pseudocount
-  control_log_means <- log(control_means + 1)
-  control_log_vars <- log(control_vars + 1)
+  gene_log_means <- log(gene_means + 1)
+  gene_log_vars <- log(gene_vars + 1)
 
   # Combine data into a data.frame
-  df <- data.frame(Var = control_log_vars, Mean = control_log_means)
+  df <- data.frame(Var = gene_log_vars, Mean = gene_log_means)
   return(df)
 }
 ```
+
+The log statistics of the genes from the untreated samples are computed.
 
 ```{r}
 # Subset data to untreated samples
@@ -125,6 +140,9 @@ plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars
 abline(a = 0, b = 1, col = "red")
 legend("topleft", "Poisson Fit", lty = 1, col = "red")
 ```
+
+The dispersion coefficient of the negative binomial distribution can be
+determined by fitting the corresponding mean-variance relationship to the data.
 
 ```{r}
 # Fit dispersion coefficient of negative binomial distribution to data
@@ -145,6 +163,8 @@ plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars
 curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 ```
+
+The same pipeline is applied to the genes from the treated samples.
 
 ```{r}
 # Subset data to treated samples
@@ -175,5 +195,82 @@ neg_binom <- function(x) x + disper_coef * x^2
 plot(treated_stats$Mean, treated_stats$Var, xlab = "Log Means", ylab = "Log Vars")
 curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
+```
+
+# Part 4
+
+```{r}
+log_cts <- log(norm_cts + 1)
+```
+
+
+```{r}
+plot(log_cts[ , "untreated1"], log_cts[ , "treated1"])
+grid()
+```
+
+```{r}
+# Identify gene that is expressed more in treated samples
+control_cond <- control_stats$Mean > 8.5 & control_stats$Mean < 9.5
+treated_cond <- treated_stats$Mean > 10 & treated_stats$Mean < 11
+
+gene1 <- rownames(norm_cts)[control_cond & treated_cond]
+gene1
+```
+```{r}
+# Identify gene that is expressed more in untreated samples
+control_cond <- control_stats$Mean > 7 & control_stats$Mean < 8
+treated_cond <- treated_stats$Mean > 4 & treated_stats$Mean < 5
+
+gene2 <- rownames(norm_cts)[control_cond & treated_cond]
+gene2
+```
+
+The expression of `r gene2` shows consistent differences between the control
+and treated conditions.
+
+```{r}
+plot(log_cts[gene2, ], ylab = "Log Expression")
+title(gene2)
+```
+
+```{r}
+library(DESeq2)
+```
+
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = cts,
+                              colData = coldata,
+                              design = ~ condition)
+
+dds <- DESeq(dds)
+res <- results(dds)
+
+res
+```
+
+Curiously, `r gene2` was designated as the most differentially expressed gene
+by DESeq2 (effect size: `r signif(res[gene2, "log2FoldChange"], 3)`, p-value:
+`r signif(res[gene2, "padj"], digits = 3)`), whereas `r gene1` did not appear
+among the top 10 genes but showed statistical significance (effect size:
+`r signif(res[gene1, "log2FoldChange"], 3)`, p-value:
+`r signif(res[gene1, "padj"], digits = 3)`).
+
+```{r}
+sorted_res <- res[order(res$padj), c("log2FoldChange", "padj")]
+head(sorted_res, 10)
+```
+
+# Part 5
+
+```{r}
+circ_df <- read.csv("data/CircadianRNAseq.csv")
+rownames(circ_df) <- make.unique(circ_df$GeneSymbol)
+circ_df[ , c("RefSeqID", "GeneSymbol")] <- NULL
+circ_mat <- as.matrix(circ_df)
+```
+
+```{r}
+plot(circ_mat["per1a", ], ylab = "Norm Expression", type = "b")
 ```
 
