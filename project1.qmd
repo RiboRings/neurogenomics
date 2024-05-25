@@ -99,7 +99,7 @@ colSums(norm_cts)
 
 # Part 3
 
-A function to compute log means an variances for every feature in an assay is
+A function to compute log means and variances for every feature in an assay is
 defined below, so that the same workflow can be applied both to untreated and
 treated samples.
 
@@ -134,6 +134,8 @@ The Poisson distribution fits the data relatively well for lower numbers of
 reads, but it creates bias for higher numbers of reads where the variance
 becomes larger than the mean. Such phenomenon is called *overdispersion*.
 
+Dolev - this explenation supposed to appear after the plotting
+
 ```{r}
 # Visualise fit of Poisson distribution to data
 plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars")
@@ -143,6 +145,8 @@ legend("topleft", "Poisson Fit", lty = 1, col = "red")
 
 The dispersion coefficient of the negative binomial distribution can be
 determined by fitting the corresponding mean-variance relationship to the data.
+
+Dolev - this explenation supposed to appear after the plotting
 
 ```{r}
 # Fit dispersion coefficient of negative binomial distribution to data
@@ -158,11 +162,16 @@ the data both for lower and higher numbers of reads.
 disper_coef <- summary(nls_fit)$coefficients["a", "Estimate"]
 neg_binom <- function(x) x + disper_coef * x^2
 
+
 # Visualise fit of negative binomial distribution to data
 plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars")
 curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 ```
+
+Dolev - in general, validate I understood this part
+Add specific answer for - "What is the value of the dispersion parameter?"
+
 
 The same pipeline is applied to the genes from the treated samples.
 
@@ -196,6 +205,11 @@ plot(treated_stats$Mean, treated_stats$Var, xlab = "Log Means", ylab = "Log Vars
 curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 ```
+
+Dolev- add specific answer for - "What is the value of the dispersion parameter?"
+and "Judging by the results obtained, do you think that the different untreated and treated samples in
+this experiment are technical or biological repeats?"
+
 
 # Part 4
 
