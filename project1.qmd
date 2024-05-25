@@ -230,6 +230,9 @@ treated_cond <- treated_stats$Mean > 10 & treated_stats$Mean < 11
 
 gene1 <- rownames(norm_cts)[control_cond & treated_cond]
 gene1
+
+Dolev - Add "The expression of `r gene1` shows consistent differences between the control
+and treated conditions". Make sure its genes and not gene
 ```
 ```{r}
 # Identify gene that is expressed more in untreated samples
@@ -239,7 +242,6 @@ treated_cond <- treated_stats$Mean > 4 & treated_stats$Mean < 5
 gene2 <- rownames(norm_cts)[control_cond & treated_cond]
 gene2
 ```
-
 The expression of `r gene2` shows consistent differences between the control
 and treated conditions.
 
@@ -247,6 +249,10 @@ and treated conditions.
 plot(log_cts[gene2, ], ylab = "Log Expression")
 title(gene2)
 ```
+
+Dolev - Make sure its genes and not gene
+We did this part differently - check it. Why using the mean here? why this values? I looked for others
+Make sure we are answering all questions
 
 ```{r}
 library(DESeq2)
