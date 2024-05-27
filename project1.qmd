@@ -134,7 +134,6 @@ The Poisson distribution fits the data relatively well for lower numbers of
 reads, but it creates bias for higher numbers of reads where the variance
 becomes larger than the mean. Such phenomenon is called *overdispersion*.
 
-Dolev - this explenation supposed to appear after the plotting
 
 ```{r}
 # Visualise fit of Poisson distribution to data
@@ -146,7 +145,6 @@ legend("topleft", "Poisson Fit", lty = 1, col = "red")
 The dispersion coefficient of the negative binomial distribution can be
 determined by fitting the corresponding mean-variance relationship to the data.
 
-Dolev - this explenation supposed to appear after the plotting
 
 ```{r}
 # Fit dispersion coefficient of negative binomial distribution to data
@@ -168,10 +166,6 @@ plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars
 curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 ```
-
-Dolev - in general, validate I understood this part
-Add specific answer for - "What is the value of the dispersion parameter?"
-
 
 The same pipeline is applied to the genes from the treated samples.
 
@@ -206,10 +200,6 @@ curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 ```
 
-Dolev- add specific answer for - "What is the value of the dispersion parameter?"
-and "Judging by the results obtained, do you think that the different untreated and treated samples in
-this experiment are technical or biological repeats?"
-
 
 # Part 4
 
@@ -231,8 +221,6 @@ treated_cond <- treated_stats$Mean > 10 & treated_stats$Mean < 11
 gene1 <- rownames(norm_cts)[control_cond & treated_cond]
 gene1
 
-Dolev - Add "The expression of `r gene1` shows consistent differences between the control
-and treated conditions". Make sure its genes and not gene
 ```
 ```{r}
 # Identify gene that is expressed more in untreated samples
@@ -250,9 +238,6 @@ plot(log_cts[gene2, ], ylab = "Log Expression")
 title(gene2)
 ```
 
-Dolev - Make sure its genes and not gene
-We did this part differently - check it. Why using the mean here? why this values? I looked for others
-Make sure we are answering all questions
 
 ```{r}
 library(DESeq2)
@@ -268,7 +253,6 @@ res <- results(dds)
 
 res
 ```
-Dolev - answer "Does the data we have fit the basic assumptions of DEseq?"
 
 Curiously, `r gene2` was designated as the most differentially expressed gene
 by DESeq2 (effect size: `r signif(res[gene2, "log2FoldChange"], 3)`, p-value:
@@ -281,9 +265,6 @@ among the top 10 genes but showed statistical significance (effect size:
 sorted_res <- res[order(res$padj), c("log2FoldChange", "padj")]
 head(sorted_res, 10)
 ```
-
-Dolev-answer here and not befor code
-Make sure we are getting the same results
 
 # Part 5
 
