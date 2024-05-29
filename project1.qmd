@@ -107,7 +107,10 @@ control_cts <- norm_cts[ , grep("^untreated", colnames(norm_cts))]
 control_stats <- find_log_stats(control_cts)
 ```
 
-The Poisson distribution fits the data relatively well for lower numbers of reads, but it creates bias for higher numbers of reads where the variance becomes larger than the mean. Such phenomenon is called *overdispersion*.
+The Poisson distribution fits the data relatively well for lower numbers of
+reads, but it creates bias for higher numbers of reads where the variance
+becomes larger than the mean. Such phenomenon is called *overdispersion*.
+
 
 ```{r}
 # Visualise fit of Poisson distribution to data
@@ -116,7 +119,9 @@ abline(a = 0, b = 1, col = "red")
 legend("topleft", "Poisson Fit", lty = 1, col = "red")
 ```
 
-The dispersion coefficient of the negative binomial distribution can be determined by fitting the corresponding mean-variance relationship to the data.
+The dispersion coefficient of the negative binomial distribution can be
+determined by fitting the corresponding mean-variance relationship to the data.
+
 
 ```{r}
 # Fit dispersion coefficient of negative binomial distribution to data
@@ -169,6 +174,7 @@ plot(treated_stats$Mean, treated_stats$Var, xlab = "Log Means", ylab = "Log Vars
 curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 ```
+Judging by our results, we can estimate that the different untreated and treated samples in this experiment are biological repeats, because these changes are represented by a greater variability that corresponds to a negative binomial distribution and less to a poison distribution, this is due to the variability that exists between different animals/tissues. As we can see, our distribution also better fits a negative binomial distribution.
 
 # Part 4
 
@@ -205,6 +211,8 @@ The expression of `r gene2` shows consistent differences between the control and
 plot(log_cts[gene2, ], ylab = "Log Expression")
 title(gene2)
 ```
+
+Our data fit the basic assumptions of DEseq, as  it based on negative binomial distribution.
 
 ```{r}
 library(DESeq2)
