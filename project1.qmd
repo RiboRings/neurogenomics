@@ -10,11 +10,29 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 
 # Part 1
 
-Next-Generation Sequencing (NGS) entails several high-throughput techniques that generate big amount of data. The main two approaches involve long-read sequencing with nanopore technology and short-read sequencing with an Illumina machine. In the latter case, Polymerase Chain Reaction (PCR) is performed by the sequence to amplify the library and quantify gene expression.
+Next-Generation Sequencing (NGS) entails several high-throughput techniques that
+generate big amount of data. The main two approaches involve long-read
+sequencing with technology and short-read sequencing with an Illumina machine.
+In the latter case, Polymerase Chain Reaction (PCR) is performed by the
+sequence to amplify the library and quantify gene expression.
 
-In the ideal situation, we would expect to have a doubling of each RNA strand in a linear fashion, so that each molecule is duplicated and the ratio between the expression levels of the different genes is maintained. However, this process introduces different types of errors due to factors such as the composition of the sequence (for example high fraction of G or C) or the secondary structure, stochasticity and mutation that make it impossible to deduce the absolute gene expression, especially for low-copy genes.
+In the ideal situation, we would expect to have a doubling of each RNA strand in
+a linear fashion, so that each molecule is duplicated and the ratio between the
+expression levels of the different genes is maintained. However, this process
+introduces different types of errors due to factors such as the composition of
+the sequence (for example high fraction of G or C) or the secondary structure,
+stochasticity and mutation that make it impossible to deduce the absolute gene
+expression, especially for low-copy genes.
 
-In addition, the sequencing process involves breaking the mRNA sequence into several pieces because the machine cannot sequence a full-length genome. Thus, multiple sequences may originate from the same sequence, so we may think there are several copies of the same gene, but in reality it is one broken copy. Therefore, we may infer a wrong expression level. Instead, sequencing data provides a compositional measure of gene expression, where every observation (or gene) is quantified in relation with the rest of the pool. Thus, it is essential to normalise reads from different samples when drawing between-sample comparisons.
+In addition, the sequencing process involves breaking the mRNA sequence into
+several pieces because the machine cannot sequence a full-length genome. Thus,
+multiple sequences may originate from the same sequence, so we may think there
+are several copies of the same gene, but in reality it is one broken copy.
+Therefore, we may infer a wrong expression level. Instead, sequencing data
+provides a compositional measure of gene expression, where every observation (or
+gene) is quantified in relation with the rest of the pool. Thus, it is essential
+to normalise reads from different samples when drawing between-sample
+comparisons.
 
 # Part 2
 
@@ -44,7 +62,8 @@ rownames(coldata) <- sub("fb", "", rownames(coldata))
 cts <- cts[, rownames(coldata)]
 ```
 
-The matrix `cts` contains the gene expression data in terms of the number of reads for `r nrow(cts)` genes from `r ncol(cts)` samples.
+The matrix `cts` contains the gene expression data in terms of the number of
+reads for `r nrow(cts)` genes from `r ncol(cts)` samples.
 
 ```{r}
 # View head of counts assay
@@ -60,14 +79,17 @@ mat_dim <- dim(cts)
 mat_dim
 ```
 
-Samples differ from one another in the library size. Therefore, read counts should be normalised.
+Samples differ from one another in the library size. Therefore, read counts
+should be normalised.
 
 ```{r}
 # View raw library sizes
 colSums(cts)
 ```
 
-Normalisation is performed by dividing the reads from every sample by the corresponding library size and multiplying by the library size of the first sample.
+Normalisation is performed by dividing the reads from every sample by the
+corresponding library size and multiplying by the library size of the first
+sample.
 
 ```{r}
 # Normalise all samples to library size of first sample
@@ -78,7 +100,9 @@ colSums(norm_cts)
 
 # Part 3
 
-A function to compute log means an variances for every feature in an assay is defined below, so that the same workflow can be applied both to untreated and treated samples.
+A function to compute log means an variances for every feature in an assay is
+defined below, so that the same workflow can be applied both to untreated and
+treated samples.
 
 ```{r}
 # Define function to compute feature-wise log means and vars
@@ -111,7 +135,6 @@ The Poisson distribution fits the data relatively well for lower numbers of
 reads, but it creates bias for higher numbers of reads where the variance
 becomes larger than the mean. Such phenomenon is called *overdispersion*.
 
-
 ```{r}
 # Visualise fit of Poisson distribution to data
 plot(control_stats$Mean, control_stats$Var, xlab = "Log Means", ylab = "Log Vars")
@@ -122,14 +145,14 @@ legend("topleft", "Poisson Fit", lty = 1, col = "red")
 The dispersion coefficient of the negative binomial distribution can be
 determined by fitting the corresponding mean-variance relationship to the data.
 
-
 ```{r}
 # Fit dispersion coefficient of negative binomial distribution to data
 nls_fit <- nls(Var ~ Mean + a * Mean^2, data = control_stats, start = list(a = 0))
 summary(nls_fit)
 ```
 
-Unlike the Poisson distribution, the negative binomial distribution fits well the data both for lower and higher numbers of reads.
+Unlike the Poisson distribution, the negative binomial distribution fits well
+the data both for lower and higher numbers of reads.
 
 ```{r}
 # Define var-mean relationship of negative binomial distribution
@@ -174,7 +197,13 @@ plot(treated_stats$Mean, treated_stats$Var, xlab = "Log Means", ylab = "Log Vars
 curve(neg_binom, col = "red", add = TRUE)
 legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 ```
-Judging by our results, we can estimate that the different untreated and treated samples in this experiment are biological repeats, because these changes are represented by a greater variability that corresponds to a negative binomial distribution and less to a poison distribution, this is due to the variability that exists between different animals/tissues. As we can see, our distribution also better fits a negative binomial distribution.
+
+Judging by our results, we can estimate that the different untreated and treated
+samples in this experiment are biological repeats, because these changes are
+represented by a greater variability that corresponds to a negative binomial
+distribution and less to a poison distribution, this is due to the variability
+that exists between different animals/tissues. As we can see, our distribution
+also better fits a negative binomial distribution.
 
 # Part 4
 
@@ -205,14 +234,16 @@ gene2 <- rownames(norm_cts)[control_cond & treated_cond]
 gene2
 ```
 
-The expression of `r gene2` shows consistent differences between the control and treated conditions.
+The expression of `r gene2` shows consistent differences between the control and
+treated conditions.
 
 ```{r}
 plot(log_cts[gene2, ], ylab = "Log Expression")
 title(gene2)
 ```
 
-Our data fit the basic assumptions of DEseq, as  it based on negative binomial distribution.
+Our data fit the basic assumptions of DEseq, as it based on negative binomial
+distribution.
 
 ```{r}
 library(DESeq2)
@@ -229,7 +260,12 @@ res <- results(dds)
 res
 ```
 
-Curiously, `r gene2` was designated as the most differentially expressed gene by DESeq2 (effect size: `r signif(res[gene2, "log2FoldChange"], 3)`, p-value: `r signif(res[gene2, "padj"], digits = 3)`), whereas `r gene1` did not appear among the top 10 genes but showed statistical significance (effect size: `r signif(res[gene1, "log2FoldChange"], 3)`, p-value: `r signif(res[gene1, "padj"], digits = 3)`).
+Curiously, `r gene2` was designated as the most differentially expressed gene by
+DESeq2 (effect size: `r signif(res[gene2, "log2FoldChange"], 3)`, p-value:
+`r signif(res[gene2, "padj"], digits = 3)`), whereas `r gene1` did not appear
+among the top 10 genes but showed statistical significance (effect size:
+`r signif(res[gene1, "log2FoldChange"], 3)`, p-value:
+`r signif(res[gene1, "padj"], digits = 3)`).
 
 ```{r}
 sorted_res <- res[order(res$padj), c("log2FoldChange", "padj")]
