@@ -201,7 +201,7 @@ legend("topleft", "Negative Binomial Fit", lty = 1, col = "red")
 Judging by our results, we can estimate that the different untreated and treated
 samples in this experiment are biological repeats, because these changes are
 represented by a greater variability that corresponds to a negative binomial
-distribution and less to a poison distribution, this is due to the variability
+distribution and less to a Poisson distribution, this is due to the variability
 that exists between different animals/tissues. As we can see, our distribution
 also better fits a negative binomial distribution.
 
