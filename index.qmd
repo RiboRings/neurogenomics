@@ -1,7 +1,9 @@
 ---
-title: "Quarto Presentations"
+title: "Neurogenomics Projects"
 format: html
 editor: visual
 ---
 
-example
+Projects:
+
+- [Project 1](https://riborings.github.io/neurogenomics/project1.html)
