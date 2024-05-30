@@ -106,15 +106,15 @@ treated samples.
 
 ```{r}
 # Define function to compute feature-wise log means and vars
-find_log_stats <- function(assay) {
+find_log_stats <- function(assay, na.rm = FALSE, pseudocount = 1) {
   
   # Compute row means and vars
-  gene_means <- rowMeans(assay)
-  gene_vars <- rowVars(assay)
+  gene_means <- rowMeans(assay, na.rm = na.rm)
+  gene_vars <- rowVars(assay, na.rm = na.rm)
 
   # Take log of means and vars with pseudocount
-  gene_log_means <- log(gene_means + 1)
-  gene_log_vars <- log(gene_vars + 1)
+  gene_log_means <- log(gene_means + pseudocount)
+  gene_log_vars <- log(gene_vars + pseudocount)
 
   # Combine data into a data.frame
   df <- data.frame(Var = gene_log_vars, Mean = gene_log_means)
@@ -338,6 +338,21 @@ sum(is.na(sorted_powers))
 # Part 6
 
 ```{r}
+circ_stats <- find_log_stats(circ_mat, na.rm = TRUE)
+```
 
+```{r}
+library(dplyr)
+library(tibble)
+
+zscore_df <- circ_stats %>%
+  rownames_to_column("GeneSymbol") %>%
+  filter(Mean >= 3) %>%
+  mutate(Bin = ntile(Mean, 20)) %>%
+  group_by(Bin) %>%
+  mutate(ZScore = Var / mean(Var)) %>%
+  arrange(desc(ZScore))
+
+knitr::kable(head(zscore_df, 40), digits = 2)
 ```
 
