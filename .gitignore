@@ -1,7 +1,5 @@
-*.html
 *.pdf
 *_files
 .Rhistory
 data/
-
 /.quarto/
