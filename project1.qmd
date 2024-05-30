@@ -274,6 +274,8 @@ head(sorted_res, 10)
 
 # Part 5
 
+The circadian RNA-Seq data from Zebrafish is imported and processed into a matrix with unique rownames.
+
 ```{r}
 circ_df <- read.csv("data/CircadianRNAseq.csv")
 rownames(circ_df) <- make.unique(circ_df$GeneSymbol)
@@ -281,6 +283,61 @@ circ_df[ , c("RefSeqID", "GeneSymbol")] <- NULL
 circ_mat <- as.matrix(circ_df)
 ```
 
+The last five rows (or genes) of the assay are printed below. From the colnames, it can be deduced that samples were collected from 11 PM until 7 PM for two consecutive days, with a time interval of 4 hours.
+
 ```{r}
-plot(circ_mat["per1a", ], ylab = "Norm Expression", type = "b")
+tail(circ_mat, 5)
 ```
+
+The expression of the per1a gene shows a rather consistent periodicity of 24 hours over the two days of sampling. Such observation agrees with the literature, as per1a is one of the genes responsible for the circadian rhythm of insects as well as mammals, where it is mostly expressed in the area of the brain known as suprachiasmatic nucleus (SPN).
+
+```{r}
+plot(circ_mat["per1a", ], ylab = "Norm Expression", type = "b", xaxt = "n")
+axis(1, at = 1:12, labels = colnames(circ_mat)) 
+```
+
+```{r}
+powers <- fft(circ_mat["per1a", ])
+powers <- as.numeric(powers * Conj(powers))[2:(1 + length(powers) / 2)]
+norm_powers <- powers / sum(powers)
+```
+
+```{r}
+t <- 4
+min_freq <- 1 / (ncol(circ_mat) * t)
+max_freq <- 1 / (2 * t)
+
+freq_range <- seq(from = min_freq, to = max_freq, by = min_freq)
+```
+
+```{r}
+plot(freq_range, norm_powers, xlab = "Frequency in 1/h", ylab = "Norm Power")
+```
+
+```{r}
+compute_powers <- function(time_series) {
+  
+  powers <- fft(time_series)
+  powers <- as.numeric(powers * Conj(powers))[2:(1 + length(powers) / 2)]
+  norm_powers <- powers / sum(powers)
+  
+  return(norm_powers)
+}
+```
+
+```{r}
+power_mat <- t(apply(circ_mat, 1, compute_powers))
+sorted_powers <- sort(power_mat[ , 2], decreasing = TRUE)
+head(sorted_powers, 10)
+```
+
+```{r}
+sum(is.na(sorted_powers))
+```
+
+# Part 6
+
+```{r}
+
+```
+
