@@ -129,9 +129,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="part-1" class="level1">
 <h1>Part 1</h1>
-<p>Next-Generation Sequencing (NGS) entails several high-throughput techniques that generate big amount of data. The main two approaches involve long-read sequencing with technology and short-read sequencing with an Illumina machine. In the latter case, Polymerase Chain Reaction (PCR) is performed by the sequence to amplify the library and quantify gene expression.</p>
-<p>In the ideal situation, we would expect to have a doubling of each RNA strand in a linear fashion, so that each molecule is duplicated and the ratio between the expression levels of the different genes is maintained. However, this process introduces different types of errors due to factors such as the composition of the sequence (for example high fraction of G or C) or the secondary structure, stochasticity and mutation that make it impossible to deduce the absolute gene expression, especially for low-copy genes.</p>
-<p>In addition, the sequencing process involves breaking the mRNA sequence into several pieces because the machine cannot sequence a full-length genome. Thus, multiple sequences may originate from the same sequence, so we may think there are several copies of the same gene, but in reality it is one broken copy. Therefore, we may infer a wrong expression level. Instead, sequencing data provides a compositional measure of gene expression, where every observation (or gene) is quantified in relation with the rest of the pool. Thus, it is essential to normalise reads from different samples when drawing between-sample comparisons.</p>
+<p>Next-Generation Sequencing (NGS) entails several high-throughput techniques that generate a big amount of data. The main two approaches involve long-read sequencing with Nanopore technology and short-read sequencing with an Illumina machine. In the latter case, Polymerase Chain Reaction (PCR) is performed by the sequencer to amplify the library and quantify gene expression.</p>
+<p>In the ideal situation, we would expect to have a doubling of each RNA strand in a linear fashion, so that each molecule is duplicated and the ratio between the expression levels of the different genes is maintained. However, this process introduces different types of errors due to factors such as the the composition of the sequence (for example high fraction of G or C) or the secondary structure, stochasticity and mutation that make it impossible to deduce the absolute gene expression, especially for low-copy genes.</p>
+<p>In addition, the sequencing process involves breaking the mRNA sequence into several pieces because the machine cannot sequence a full-length genome. Thus, multiple variants may originate from the same sequence, so we may think there are several copies of the same gene, but in reality it is one broken copy. Therefore, we may infer a wrong expression level. Instead, sequencing data provides a compositional measure of gene expression, where every observation (or gene) is quantified in relation to the rest of the pool. Thus, it is essential to normalise reads from different samples when drawing between-sample comparisons.</p>
 </section>
 <section id="part-2" class="level1">
 <h1>Part 2</h1>
@@ -536,6 +536,7 @@ UBXN4       13.86520  20.21520  15.92240 19.05500 19.76430 19.02300</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>circ_stats <span class="ot">&lt;-</span> <span class="fu">find_log_stats</span>(circ_mat, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The genes are binned by similarity in library size and a z-score is calculated within each bin. The top 40 genes with the highest z-score are then inspected to understand their relation with circadian rhythms.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
@@ -852,6 +853,7 @@ UBXN4       13.86520  20.21520  15.92240 19.05500 19.76430 19.02300</code></pre>
 </table>
 </div>
 </div>
+<p>Most of the top 40 genes are involved in the absorption of calcium and the formation of bones. Such processes are known to be linked to the concentration of vitamin D in the body, which is produced upon exposure to sunlight. Therefore, we conclude that the found top 40 genes indeed show relevant oscillations with a period of 24 hours in relation with the circadian rhythms.</p>
 
 
 </section>

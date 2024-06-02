@@ -11,26 +11,26 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.path = "plots/")
 # Part 1
 
 Next-Generation Sequencing (NGS) entails several high-throughput techniques that
-generate big amount of data. The main two approaches involve long-read
-sequencing with technology and short-read sequencing with an Illumina machine.
-In the latter case, Polymerase Chain Reaction (PCR) is performed by the
-sequence to amplify the library and quantify gene expression.
+generate a big amount of data. The main two approaches involve long-read
+sequencing with Nanopore technology and short-read sequencing with an Illumina
+machine. In the latter case, Polymerase Chain Reaction (PCR) is performed by the
+sequencer to amplify the library and quantify gene expression.
 
 In the ideal situation, we would expect to have a doubling of each RNA strand in
 a linear fashion, so that each molecule is duplicated and the ratio between the
 expression levels of the different genes is maintained. However, this process
-introduces different types of errors due to factors such as the composition of
-the sequence (for example high fraction of G or C) or the secondary structure,
-stochasticity and mutation that make it impossible to deduce the absolute gene
-expression, especially for low-copy genes.
+introduces different types of errors due to factors such as the the composition
+of the sequence (for example high fraction of G or C) or the secondary
+structure, stochasticity and mutation that make it impossible to deduce the
+absolute gene expression, especially for low-copy genes.
 
 In addition, the sequencing process involves breaking the mRNA sequence into
 several pieces because the machine cannot sequence a full-length genome. Thus,
-multiple sequences may originate from the same sequence, so we may think there
+multiple variants may originate from the same sequence, so we may think there
 are several copies of the same gene, but in reality it is one broken copy.
 Therefore, we may infer a wrong expression level. Instead, sequencing data
 provides a compositional measure of gene expression, where every observation (or
-gene) is quantified in relation with the rest of the pool. Thus, it is essential
+gene) is quantified in relation to the rest of the pool. Thus, it is essential
 to normalise reads from different samples when drawing between-sample
 comparisons.
 
@@ -341,6 +341,10 @@ sum(is.na(sorted_powers))
 circ_stats <- find_log_stats(circ_mat, na.rm = TRUE)
 ```
 
+The genes are binned by similarity in library size and a z-score is calculated
+within each bin. The top 40 genes with the highest z-score are then inspected to
+understand their relation with circadian rhythms.
+
 ```{r}
 library(dplyr)
 library(tibble)
@@ -356,3 +360,8 @@ zscore_df <- circ_stats %>%
 knitr::kable(head(zscore_df, 40), digits = 2)
 ```
 
+Several of the top 40 genes are involved in the absorption of calcium and the
+formation of bones. Such processes are known to be linked to the concentration
+of vitamin D in the body, which is produced upon exposure to sunlight.
+Therefore, we conclude that the found top 40 genes indeed show relevant
+oscillations with a period of 24 hours in relation with the circadian rhythms.
