@@ -1,5 +1,7 @@
+*.docx
 *.pdf
 *_files
 .Rhistory
 data/
 /.quarto/
+.DS_Store
