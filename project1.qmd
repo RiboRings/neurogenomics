@@ -314,6 +314,22 @@ freq_range <- seq(from = min_freq, to = max_freq, by = min_freq)
 plot(freq_range, norm_powers, xlab = "Frequency in 1/h", ylab = "Norm Power")
 ```
 
+Between the options of (a) designing an experiment with (a) a higher time
+resolution or (b) a longer duration, I believe that option (a) is preferred,
+because this can yield a more accurate estimate of the frequency components of
+the signal. Instead, option (b) provide relatively little new information, as
+the current design already seems to identify the main frequency components
+rather well, and a longer duration is unlikely to find more of them.
+
+Frequency analysis represents a more powerful tool than time analysis to detect
+the oscillatory nature of biological signals. Because signals are almost
+always composed by several waves with different sub-frequencies and mixed up
+with noise, it is not practical to study their oscillatory nature in the time
+domain. Instead, the frequency domain allows to separate the frequency
+components of the signal, which can be thereby described as the sum of simple
+waves, such as sine and cosine functions. Therefore, it is convenient to study
+oscillatory behaviour with frequency analysis.
+
 ```{r}
 compute_powers <- function(time_series) {
   

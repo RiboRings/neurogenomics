@@ -503,6 +503,8 @@ UBXN4       13.86520  20.21520  15.92240 19.05500 19.76430 19.02300</code></pre>
 <p><img src="plots/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Between the options of (a) designing an experiment with (a) a higher time resolution or (b) a longer duration, I believe that option (a) is preferred, because this can yield a more accurate estimate of the frequency components of the signal. Instead, option (b) provide relatively little new information, as the current design already seems to identify the main frequency components rather well, and a longer duration is unlikely to find more of them.</p>
+<p>Frequency analysis represents a more powerful tool than time analysis to detect the oscillatory nature of biological signals. Because signals are almost always composed by several waves with different sub-frequencies and mixed up with noise, it is not practical to study their oscillatory nature in the time domain. Instead, the frequency domain allows to separate the frequency components of the signal, which can be thereby described as the sum of simple waves, such as sine and cosine functions. Therefore, it is convenient to study oscillatory behaviour with frequency analysis.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>compute_powers <span class="ot">&lt;-</span> <span class="cf">function</span>(time_series) {</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -853,7 +855,7 @@ UBXN4       13.86520  20.21520  15.92240 19.05500 19.76430 19.02300</code></pre>
 </table>
 </div>
 </div>
-<p>Most of the top 40 genes are involved in the absorption of calcium and the formation of bones. Such processes are known to be linked to the concentration of vitamin D in the body, which is produced upon exposure to sunlight. Therefore, we conclude that the found top 40 genes indeed show relevant oscillations with a period of 24 hours in relation with the circadian rhythms.</p>
+<p>Several of the top 40 genes are involved in the absorption of calcium and the formation of bones. Such processes are known to be linked to the concentration of vitamin D in the body, which is produced upon exposure to sunlight. Therefore, we conclude that the found top 40 genes indeed show relevant oscillations with a period of 24 hours in relation with the circadian rhythms.</p>
 
 
 </section>
