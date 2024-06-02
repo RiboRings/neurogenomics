@@ -354,6 +354,7 @@ sum(is.na(sorted_powers))
 # Part 6
 
 ```{r}
+# Compute log statistics of each gene with custom function from part 2
 circ_stats <- find_log_stats(circ_mat, na.rm = TRUE)
 ```
 
@@ -365,14 +366,16 @@ understand their relation with circadian rhythms.
 library(dplyr)
 library(tibble)
 
+# Bin genes and compute their z-score
 zscore_df <- circ_stats %>%
   rownames_to_column("GeneSymbol") %>%
   filter(Mean >= 3) %>%
   mutate(Bin = ntile(Mean, 20)) %>%
   group_by(Bin) %>%
-  mutate(ZScore = Var / mean(Var)) %>%
+  mutate(ZScore = (Var - mean(Var)) / sd(Var)) %>%
   arrange(desc(ZScore))
 
+# View genes sorted by z-score
 knitr::kable(head(zscore_df, 40), digits = 2)
 ```
 
