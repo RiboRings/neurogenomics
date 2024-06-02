@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -124,9 +90,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">message =</span> <span class="cn">FALSE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">fig.path =</span> <span class="st">"plots/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <section id="part-1" class="level1">
 <h1>Part 1</h1>
 <p>Next-Generation Sequencing (NGS) entails several high-throughput techniques that generate a big amount of data. The main two approaches involve long-read sequencing with Nanopore technology and short-read sequencing with an Illumina machine. In the latter case, Polymerase Chain Reaction (PCR) is performed by the sequencer to amplify the library and quantify gene expression.</p>
@@ -136,31 +99,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="part-2" class="level1">
 <h1>Part 2</h1>
 <p>The package with the data of interest is imported.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import package</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pasilla)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <p>RNA-Seq data from Drosophila melanogaster is loaded from the package.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load data</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pasCts <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"pasilla_gene_counts.tsv"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">package =</span> <span class="st">"pasilla"</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pasAnno <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="st">"pasilla_sample_annotation.csv"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">package=</span><span class="st">"pasilla"</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>cts <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">read.csv</span>(pasCts, <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">row.names =</span> <span class="st">"gene_id"</span>))</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>coldata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(pasAnno, <span class="at">row.names =</span> <span class="dv">1</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>coldata <span class="ot">&lt;-</span> coldata[ , <span class="fu">c</span>(<span class="st">"condition"</span>, <span class="st">"type"</span>)]</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(coldata) <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">"fb"</span>, <span class="st">""</span>, <span class="fu">rownames</span>(coldata))</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>cts <span class="ot">&lt;-</span> cts[, <span class="fu">rownames</span>(coldata)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <p>The matrix <code>cts</code> contains the gene expression data in terms of the number of reads for 14599 genes from 7 samples.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View head of counts assay</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(cts, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            treated1 treated2 treated3 untreated1 untreated2 untreated3
 FBgn0000003        0        0        1          0          0          0
@@ -188,18 +129,12 @@ FBgn0000032        672</code></pre>
 </div>
 <p>Dimensions of the counts assay can be retrieved with the <code>dim</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Store assay dimensions</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>mat_dim <span class="ot">&lt;-</span> <span class="fu">dim</span>(cts)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># View assay dimensions</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>mat_dim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 14599     7</code></pre>
 </div>
 </div>
 <p>Samples differ from one another in the library size. Therefore, read counts should be normalised.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View raw library sizes</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(cts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  treated1   treated2   treated3 untreated1 untreated2 untreated3 untreated4 
   18670279    9571826   10343856   13972512   21911438    8358426    9841335 </code></pre>
@@ -207,10 +142,6 @@ FBgn0000032        672</code></pre>
 </div>
 <p>Normalisation is performed by dividing the reads from every sample by the corresponding library size and multiplying by the library size of the first sample.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Normalise all samples to library size of first sample</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>norm_cts <span class="ot">&lt;-</span> <span class="fu">apply</span>(cts, <span class="dv">2</span>, <span class="cf">function</span>(col) col <span class="sc">/</span> <span class="fu">sum</span>(col) <span class="sc">*</span> <span class="fu">sum</span>(cts[ , <span class="dv">1</span>]))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check normalised library sizes</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(norm_cts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  treated1   treated2   treated3 untreated1 untreated2 untreated3 untreated4 
   18670279   18670279   18670279   18670279   18670279   18670279   18670279 </code></pre>
@@ -219,46 +150,16 @@ FBgn0000032        672</code></pre>
 </section>
 <section id="part-3" class="level1">
 <h1>Part 3</h1>
-<p>A function to compute log means an variances for every feature in an assay is defined below, so that the same workflow can be applied both to untreated and treated samples.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define function to compute feature-wise log means and vars</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>find_log_stats <span class="ot">&lt;-</span> <span class="cf">function</span>(assay, <span class="at">na.rm =</span> <span class="cn">FALSE</span>, <span class="at">pseudocount =</span> <span class="dv">1</span>) {</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Compute row means and vars</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  gene_means <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(assay, <span class="at">na.rm =</span> na.rm)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  gene_vars <span class="ot">&lt;-</span> <span class="fu">rowVars</span>(assay, <span class="at">na.rm =</span> na.rm)</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Take log of means and vars with pseudocount</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  gene_log_means <span class="ot">&lt;-</span> <span class="fu">log</span>(gene_means <span class="sc">+</span> pseudocount)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  gene_log_vars <span class="ot">&lt;-</span> <span class="fu">log</span>(gene_vars <span class="sc">+</span> pseudocount)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Combine data into a data.frame</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Var =</span> gene_log_vars, <span class="at">Mean =</span> gene_log_means)</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(df)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>A function to compute log means and variances for every feature in an assay is defined below, so that the same workflow can be applied both to untreated and treated samples.</p>
 <p>The log statistics of the genes from the untreated samples are computed.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset data to untreated samples</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>control_cts <span class="ot">&lt;-</span> norm_cts[ , <span class="fu">grep</span>(<span class="st">"^untreated"</span>, <span class="fu">colnames</span>(norm_cts))]</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find log means and vars for genes in control samples</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>control_stats <span class="ot">&lt;-</span> <span class="fu">find_log_stats</span>(control_cts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <p>The Poisson distribution fits the data relatively well for lower numbers of reads, but it creates bias for higher numbers of reads where the variance becomes larger than the mean. Such phenomenon is called <em>overdispersion</em>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualise fit of Poisson distribution to data</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(control_stats<span class="sc">$</span>Mean, control_stats<span class="sc">$</span>Var, <span class="at">xlab =</span> <span class="st">"Log Means"</span>, <span class="at">ylab =</span> <span class="st">"Log Vars"</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="st">"Poisson Fit"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The dispersion coefficient of the negative binomial distribution can be determined by fitting the corresponding mean-variance relationship to the data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit dispersion coefficient of negative binomial distribution to data</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>nls_fit <span class="ot">&lt;-</span> <span class="fu">nls</span>(Var <span class="sc">~</span> Mean <span class="sc">+</span> a <span class="sc">*</span> Mean<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> control_stats, <span class="at">start =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">0</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nls_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Formula: Var ~ Mean + a * Mean^2
@@ -277,38 +178,17 @@ Achieved convergence tolerance: 1.408e-11</code></pre>
 </div>
 <p>Unlike the Poisson distribution, the negative binomial distribution fits well the data both for lower and higher numbers of reads.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define var-mean relationship of negative binomial distribution</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>disper_coef <span class="ot">&lt;-</span> <span class="fu">summary</span>(nls_fit)<span class="sc">$</span>coefficients[<span class="st">"a"</span>, <span class="st">"Estimate"</span>]</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>neg_binom <span class="ot">&lt;-</span> <span class="cf">function</span>(x) x <span class="sc">+</span> disper_coef <span class="sc">*</span> x<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualise fit of negative binomial distribution to data</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(control_stats<span class="sc">$</span>Mean, control_stats<span class="sc">$</span>Var, <span class="at">xlab =</span> <span class="st">"Log Means"</span>, <span class="at">ylab =</span> <span class="st">"Log Vars"</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(neg_binom, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="st">"Negative Binomial Fit"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The same pipeline is applied to the genes from the treated samples.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset data to treated samples</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>treated_cts <span class="ot">&lt;-</span> norm_cts[ , <span class="fu">grep</span>(<span class="st">"^treated"</span>, <span class="fu">colnames</span>(norm_cts))]</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find log means and vars for genes in treated samples</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>treated_stats <span class="ot">&lt;-</span> <span class="fu">find_log_stats</span>(treated_cts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualise fit of Poisson distribution to data</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(control_stats<span class="sc">$</span>Mean, treated_stats<span class="sc">$</span>Var, <span class="at">xlab =</span> <span class="st">"Log Means"</span>, <span class="at">ylab =</span> <span class="st">"Log Vars"</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">a =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="st">"Poisson Fit"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit dispersion coefficient of negative binomial distribution to data</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>nls_fit <span class="ot">&lt;-</span> <span class="fu">nls</span>(Var <span class="sc">~</span> Mean <span class="sc">+</span> a <span class="sc">*</span> Mean<span class="sc">^</span><span class="dv">2</span>, <span class="at">data =</span> treated_stats, <span class="at">start =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">0</span>))</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nls_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Formula: Var ~ Mean + a * Mean^2
@@ -326,14 +206,6 @@ Achieved convergence tolerance: 7.173e-11</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define var-mean relationship of negative binomial distribution</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>disper_coef <span class="ot">&lt;-</span> <span class="fu">summary</span>(nls_fit)<span class="sc">$</span>coefficients[<span class="st">"a"</span>, <span class="st">"Estimate"</span>]</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>neg_binom <span class="ot">&lt;-</span> <span class="cf">function</span>(x) x <span class="sc">+</span> disper_coef <span class="sc">*</span> x<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualise fit of negative binomial distribution to data</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(treated_stats<span class="sc">$</span>Mean, treated_stats<span class="sc">$</span>Var, <span class="at">xlab =</span> <span class="st">"Log Means"</span>, <span class="at">ylab =</span> <span class="st">"Log Vars"</span>)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(neg_binom, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="st">"Negative Binomial Fit"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -343,58 +215,28 @@ Achieved convergence tolerance: 7.173e-11</code></pre>
 <section id="part-4" class="level1">
 <h1>Part 4</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>log_cts <span class="ot">&lt;-</span> <span class="fu">log</span>(norm_cts <span class="sc">+</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(log_cts[ , <span class="st">"untreated1"</span>], log_cts[ , <span class="st">"treated1"</span>])</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify gene that is expressed more in treated samples</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>control_cond <span class="ot">&lt;-</span> control_stats<span class="sc">$</span>Mean <span class="sc">&gt;</span> <span class="fl">8.5</span> <span class="sc">&amp;</span> control_stats<span class="sc">$</span>Mean <span class="sc">&lt;</span> <span class="fl">9.5</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>treated_cond <span class="ot">&lt;-</span> treated_stats<span class="sc">$</span>Mean <span class="sc">&gt;</span> <span class="dv">10</span> <span class="sc">&amp;</span> treated_stats<span class="sc">$</span>Mean <span class="sc">&lt;</span> <span class="dv">11</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>gene1 <span class="ot">&lt;-</span> <span class="fu">rownames</span>(norm_cts)[control_cond <span class="sc">&amp;</span> treated_cond]</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>gene1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "FBgn0033367"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identify gene that is expressed more in untreated samples</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>control_cond <span class="ot">&lt;-</span> control_stats<span class="sc">$</span>Mean <span class="sc">&gt;</span> <span class="dv">7</span> <span class="sc">&amp;</span> control_stats<span class="sc">$</span>Mean <span class="sc">&lt;</span> <span class="dv">8</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>treated_cond <span class="ot">&lt;-</span> treated_stats<span class="sc">$</span>Mean <span class="sc">&gt;</span> <span class="dv">4</span> <span class="sc">&amp;</span> treated_stats<span class="sc">$</span>Mean <span class="sc">&lt;</span> <span class="dv">5</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>gene2 <span class="ot">&lt;-</span> <span class="fu">rownames</span>(norm_cts)[control_cond <span class="sc">&amp;</span> treated_cond]</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>gene2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "FBgn0039155"</code></pre>
 </div>
 </div>
 <p>The expression of FBgn0039155 shows consistent differences between the control and treated conditions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(log_cts[gene2, ], <span class="at">ylab =</span> <span class="st">"Log Expression"</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(gene2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Our data fit the basic assumptions of DEseq, as it based on negative binomial distribution.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DESeq2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeqDataSetFromMatrix</span>(<span class="at">countData =</span> cts,</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                              <span class="at">colData =</span> coldata,</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                              <span class="at">design =</span> <span class="sc">~</span> condition)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>dds <span class="ot">&lt;-</span> <span class="fu">DESeq</span>(dds)</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">results</span>(dds)</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>log2 fold change (MLE): condition untreated vs treated 
 Wald test p-value: condition untreated vs treated 
@@ -429,8 +271,6 @@ FBgn0261575  0.967912</code></pre>
 </div>
 <p>Curiously, FBgn0039155 was designated as the most differentially expressed gene by DESeq2 (effect size: 4.62, p-value: 4.07^{-161}), whereas FBgn0033367 did not appear among the top 10 genes but showed statistical significance (effect size: -1.45, p-value: 10^{-9}).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>sorted_res <span class="ot">&lt;-</span> res[<span class="fu">order</span>(res<span class="sc">$</span>padj), <span class="fu">c</span>(<span class="st">"log2FoldChange"</span>, <span class="st">"padj"</span>)]</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sorted_res, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>log2 fold change (MLE): condition untreated vs treated 
  
@@ -453,15 +293,8 @@ FBgn0051092       -2.32771  1.09010e-36</code></pre>
 <section id="part-5" class="level1">
 <h1>Part 5</h1>
 <p>The circadian RNA-Seq data from Zebrafish is imported and processed into a matrix with unique rownames.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>circ_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/CircadianRNAseq.csv"</span>)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(circ_df) <span class="ot">&lt;-</span> <span class="fu">make.unique</span>(circ_df<span class="sc">$</span>GeneSymbol)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>circ_df[ , <span class="fu">c</span>(<span class="st">"RefSeqID"</span>, <span class="st">"GeneSymbol"</span>)] <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>circ_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(circ_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <p>The last five rows (or genes) of the assay are printed below. From the colnames, it can be deduced that samples were collected from 11 PM until 7 PM for two consecutive days, with a time interval of 4 hours.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(circ_mat, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>              A_11PM     A_3AM     A_7AM    A_11AM     A_3PM     A_7PM
 zgc:136896 255.99900 209.97600 125.42200 143.07200 112.50300 101.81700
@@ -479,26 +312,11 @@ UBXN4       13.86520  20.21520  15.92240 19.05500 19.76430 19.02300</code></pre>
 </div>
 <p>The expression of the per1a gene shows a rather consistent periodicity of 24 hours over the two days of sampling. Such observation agrees with the literature, as per1a is one of the genes responsible for the circadian rhythm of insects as well as mammals, where it is mostly expressed in the area of the brain known as suprachiasmatic nucleus (SPN).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(circ_mat[<span class="st">"per1a"</span>, ], <span class="at">ylab =</span> <span class="st">"Norm Expression"</span>, <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="at">at =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>, <span class="at">labels =</span> <span class="fu">colnames</span>(circ_mat)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-27-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>powers <span class="ot">&lt;-</span> <span class="fu">fft</span>(circ_mat[<span class="st">"per1a"</span>, ])</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>powers <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(powers <span class="sc">*</span> <span class="fu">Conj</span>(powers))[<span class="dv">2</span><span class="sc">:</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">length</span>(powers) <span class="sc">/</span> <span class="dv">2</span>)]</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>norm_powers <span class="ot">&lt;-</span> powers <span class="sc">/</span> <span class="fu">sum</span>(powers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="dv">4</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>min_freq <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="fu">ncol</span>(circ_mat) <span class="sc">*</span> t)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>max_freq <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> (<span class="dv">2</span> <span class="sc">*</span> t)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>freq_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> min_freq, <span class="at">to =</span> max_freq, <span class="at">by =</span> min_freq)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(freq_range, norm_powers, <span class="at">xlab =</span> <span class="st">"Frequency in 1/h"</span>, <span class="at">ylab =</span> <span class="st">"Norm Power"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="plots/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -506,28 +324,12 @@ UBXN4       13.86520  20.21520  15.92240 19.05500 19.76430 19.02300</code></pre>
 <p>Between the options of (a) designing an experiment with (a) a higher time resolution or (b) a longer duration, I believe that option (a) is preferred, because this can yield a more accurate estimate of the frequency components of the signal. Instead, option (b) provide relatively little new information, as the current design already seems to identify the main frequency components rather well, and a longer duration is unlikely to find more of them.</p>
 <p>Frequency analysis represents a more powerful tool than time analysis to detect the oscillatory nature of biological signals. Because signals are almost always composed by several waves with different sub-frequencies and mixed up with noise, it is not practical to study their oscillatory nature in the time domain. Instead, the frequency domain allows to separate the frequency components of the signal, which can be thereby described as the sum of simple waves, such as sine and cosine functions. Therefore, it is convenient to study oscillatory behaviour with frequency analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>compute_powers <span class="ot">&lt;-</span> <span class="cf">function</span>(time_series) {</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  powers <span class="ot">&lt;-</span> <span class="fu">fft</span>(time_series)</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  powers <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(powers <span class="sc">*</span> <span class="fu">Conj</span>(powers))[<span class="dv">2</span><span class="sc">:</span>(<span class="dv">1</span> <span class="sc">+</span> <span class="fu">length</span>(powers) <span class="sc">/</span> <span class="dv">2</span>)]</span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  norm_powers <span class="ot">&lt;-</span> powers <span class="sc">/</span> <span class="fu">sum</span>(powers)</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(norm_powers)</span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>power_mat <span class="ot">&lt;-</span> <span class="fu">t</span>(<span class="fu">apply</span>(circ_mat, <span class="dv">1</span>, compute_powers))</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>sorted_powers <span class="ot">&lt;-</span> <span class="fu">sort</span>(power_mat[ , <span class="dv">2</span>], <span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(sorted_powers, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   atxn1b       fus    nr1d2b     rdh1l  ankrd10a    phyhd1 arntl1b.1    ARNTL2 
-0.9658877 0.9575730 0.9518555 0.9505309 0.9502425 0.9459556 0.9420237 0.9276018 
-     Ldhd     aclya 
-0.9251018 0.9218165 </code></pre>
+<pre><code> [1] "atxn1b"    "fus"       "nr1d2b"    "rdh1l"     "ankrd10a"  "phyhd1"   
+ [7] "arntl1b.1" "ARNTL2"    "Ldhd"      "aclya"    </code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(sorted_powers))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
@@ -535,25 +337,8 @@ UBXN4       13.86520  20.21520  15.92240 19.05500 19.76430 19.02300</code></pre>
 </section>
 <section id="part-6" class="level1">
 <h1>Part 6</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>circ_stats <span class="ot">&lt;-</span> <span class="fu">find_log_stats</span>(circ_mat, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 <p>The genes are binned by similarity in library size and a z-score is calculated within each bin. The top 40 genes with the highest z-score are then inspected to understand their relation with circadian rhythms.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Bin genes and compute their z-score</span></span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>zscore_df <span class="ot">&lt;-</span> circ_stats <span class="sc">%&gt;%</span></span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">"GeneSymbol"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Mean <span class="sc">&gt;=</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Bin =</span> <span class="fu">ntile</span>(Mean, <span class="dv">20</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Bin) <span class="sc">%&gt;%</span></span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ZScore =</span> (Var <span class="sc">-</span> <span class="fu">mean</span>(Var)) <span class="sc">/</span> <span class="fu">sd</span>(Var)) <span class="sc">%&gt;%</span></span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(ZScore))</span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="co"># View genes sorted by z-score</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(zscore_df, <span class="dv">40</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <colgroup>

@@ -5,7 +5,9 @@ editor: visual
 ---
 
 ```{r}
-knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.path = "plots/")
+#| include: FALSE
+knitr::opts_chunk$set(message = FALSE, warning = FALSE,
+                      echo = FALSE, fig.path = "plots/")
 ```
 
 # Part 1
@@ -100,7 +102,7 @@ colSums(norm_cts)
 
 # Part 3
 
-A function to compute log means an variances for every feature in an assay is
+A function to compute log means and variances for every feature in an assay is
 defined below, so that the same workflow can be applied both to untreated and
 treated samples.
 
@@ -208,11 +210,14 @@ also better fits a negative binomial distribution.
 # Part 4
 
 ```{r}
+# Transform normalised assay to log assay with pseudocount
 log_cts <- log(norm_cts + 1)
 ```
 
 ```{r}
-plot(log_cts[ , "untreated1"], log_cts[ , "treated1"])
+# Visualise log counts of treated vs untreated samples
+plot(log_cts[ , "untreated1"], log_cts[ , "treated1"],
+     xlab = "Log Expression (untreated)", ylab = "Log Expression (treated)")
 grid()
 ```
 
@@ -238,6 +243,7 @@ The expression of `r gene2` shows consistent differences between the control and
 treated conditions.
 
 ```{r}
+# Visualise differential expression of selected gene
 plot(log_cts[gene2, ], ylab = "Log Expression")
 title(gene2)
 ```
@@ -250,6 +256,7 @@ library(DESeq2)
 ```
 
 ```{r}
+# Run deseq2
 dds <- DESeqDataSetFromMatrix(countData = cts,
                               colData = coldata,
                               design = ~ condition)
@@ -268,6 +275,7 @@ among the top 10 genes but showed statistical significance (effect size:
 `r signif(res[gene1, "padj"], digits = 3)`).
 
 ```{r}
+# View genes ordered by differential expression
 sorted_res <- res[order(res$padj), c("log2FoldChange", "padj")]
 head(sorted_res, 10)
 ```
@@ -277,7 +285,10 @@ head(sorted_res, 10)
 The circadian RNA-Seq data from Zebrafish is imported and processed into a matrix with unique rownames.
 
 ```{r}
+# Import dataset
 circ_df <- read.csv("data/CircadianRNAseq.csv")
+
+# Preprocess dataset
 rownames(circ_df) <- make.unique(circ_df$GeneSymbol)
 circ_df[ , c("RefSeqID", "GeneSymbol")] <- NULL
 circ_mat <- as.matrix(circ_df)
@@ -286,23 +297,27 @@ circ_mat <- as.matrix(circ_df)
 The last five rows (or genes) of the assay are printed below. From the colnames, it can be deduced that samples were collected from 11 PM until 7 PM for two consecutive days, with a time interval of 4 hours.
 
 ```{r}
+# Show expression of last 5 genes
 tail(circ_mat, 5)
 ```
 
 The expression of the per1a gene shows a rather consistent periodicity of 24 hours over the two days of sampling. Such observation agrees with the literature, as per1a is one of the genes responsible for the circadian rhythm of insects as well as mammals, where it is mostly expressed in the area of the brain known as suprachiasmatic nucleus (SPN).
 
 ```{r}
+# Visualise oscillatory pattern of per1a gene over samples
 plot(circ_mat["per1a", ], ylab = "Norm Expression", type = "b", xaxt = "n")
 axis(1, at = 1:12, labels = colnames(circ_mat)) 
 ```
 
 ```{r}
+# Find frequency powers
 powers <- fft(circ_mat["per1a", ])
 powers <- as.numeric(powers * Conj(powers))[2:(1 + length(powers) / 2)]
 norm_powers <- powers / sum(powers)
 ```
 
 ```{r}
+# Find base frequencies
 t <- 4
 min_freq <- 1 / (ncol(circ_mat) * t)
 max_freq <- 1 / (2 * t)
@@ -311,6 +326,7 @@ freq_range <- seq(from = min_freq, to = max_freq, by = min_freq)
 ```
 
 ```{r}
+# Visualise frequency components of oscillatory pattern for per1a
 plot(freq_range, norm_powers, xlab = "Frequency in 1/h", ylab = "Norm Power")
 ```
 
@@ -331,6 +347,7 @@ waves, such as sine and cosine functions. Therefore, it is convenient to study
 oscillatory behaviour with frequency analysis.
 
 ```{r}
+# Define function to obtain frequency powers with fft
 compute_powers <- function(time_series) {
   
   powers <- fft(time_series)
@@ -342,19 +359,28 @@ compute_powers <- function(time_series) {
 ```
 
 ```{r}
+# Obtain frequency powers for every gene in assay
 power_mat <- t(apply(circ_mat, 1, compute_powers))
-sorted_powers <- sort(power_mat[ , 2], decreasing = TRUE)
+
+# Sort genes by their 24-hour frequency power
+power_idx <- order(power_mat[ , 2], decreasing = TRUE)
+sorted_powers <- rownames(power_mat)[power_idx]
+
+# sort provides an easier way
+# sorted_powers <- sort(power_mat[ , 2], decreasing = TRUE)
+
 head(sorted_powers, 10)
 ```
 
 ```{r}
+# Check if na values are present
 sum(is.na(sorted_powers))
 ```
 
 # Part 6
 
 ```{r}
-# Compute log statistics of each gene with custom function from part 2
+# Compute log statistics of each gene with custom function from part 3
 circ_stats <- find_log_stats(circ_mat, na.rm = TRUE)
 ```
 
