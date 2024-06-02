@@ -9,6 +9,9 @@ editor: visual
 knitr::opts_chunk$set(message = FALSE, warning = FALSE,
                       echo = FALSE, fig.path = "plots/")
 ```
+Neurogenomics - Task 1
+Giulio Benedetti - YB8191431, Dolev Michaelovich - 207686031
+ 
 
 # Part 1
 
@@ -331,11 +334,9 @@ plot(freq_range, norm_powers, xlab = "Frequency in 1/h", ylab = "Norm Power")
 ```
 
 Between the options of (a) designing an experiment with (a) a higher time
-resolution or (b) a longer duration, I believe that option (a) is preferred,
-because this can yield a more accurate estimate of the frequency components of
-the signal. Instead, option (b) provide relatively little new information, as
-the current design already seems to identify the main frequency components
-rather well, and a longer duration is unlikely to find more of them.
+resolution or (b) a longer duration, we believe that option (b) is preferred, because, as we learned and applied at the beginning of the exercise, in order to get more reliable results, there is first of all a need to perform repeated measurements of the same situation. Therefore, if we want to prove that a certain gene operates at a circadian frequency, we must first measure it a sufficient number of times in order to prove that it is not an error/noise/non-normalized results and more.
+In addition, in order to show that this is not a temporary or passing phenomenon, measurement of multiple days will make it possible to prove that the gene works in a circadian manner regularly.
+However, option (a) can yield a more accurate estimate of the frequency components of the signal and to increase the Nyquist frequency, so it can be useful in situations where we want to get the best shape of the signal expressing the expression level or get a wider range of frequencies along the way.
 
 Frequency analysis represents a more powerful tool than time analysis to detect
 the oscillatory nature of biological signals. Because signals are almost
@@ -343,8 +344,8 @@ always composed by several waves with different sub-frequencies and mixed up
 with noise, it is not practical to study their oscillatory nature in the time
 domain. Instead, the frequency domain allows to separate the frequency
 components of the signal, which can be thereby described as the sum of simple
-waves, such as sine and cosine functions. Therefore, it is convenient to study
-oscillatory behaviour with frequency analysis.
+waves, such as sine and cosine functions. In addition, working with frequencies you can take out noises and get better results for the circadian cycle.
+
 
 ```{r}
 # Define function to obtain frequency powers with fft
@@ -371,6 +372,8 @@ sorted_powers <- rownames(power_mat)[power_idx]
 
 head(sorted_powers, 10)
 ```
+
+We found out that one of the relevant genes - 'nr1d2b', is involved in regulation of circadian rhythm.
 
 ```{r}
 # Check if na values are present
@@ -404,9 +407,10 @@ zscore_df <- circ_stats %>%
 # View genes sorted by z-score
 knitr::kable(head(zscore_df, 40), digits = 2)
 ```
+We can detect some known circadian genes from this table:
+For example – the gene 'nr1d2b' is involved in regulation of circadian rhythm.
+In addition, the gene 'bhlhb3l' is involved in regulation of circadian rhythms.
+It Is expected that circadian genes will also be variable gene, as they are changing over time during the day, so it make sense that they have big differences in expression levels.
+Also, changes in environmental conditions throughout the day may lead to the need for the body to adapt to different conditions such as different weather during the day or night or light and darkness, therefore the ability to change in cycles over time can lead to increased variability in expression
 
-Several of the top 40 genes are involved in the absorption of calcium and the
-formation of bones. Such processes are known to be linked to the concentration
-of vitamin D in the body, which is produced upon exposure to sunlight.
-Therefore, we conclude that the found top 40 genes indeed show relevant
-oscillations with a period of 24 hours in relation with the circadian rhythms.
+
