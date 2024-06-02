@@ -1,17 +1,16 @@
 ---
-title: "Project 1"
-format: html
+title: "Neurogenomics Project 1"
+format: pdf
 editor: visual
+author:
+  - Dolev Michaelovich (207686031)
+  - Giulio Benedetti (YB8191431)
 ---
 
 ```{r}
 #| include: FALSE
-knitr::opts_chunk$set(message = FALSE, warning = FALSE,
-                      echo = FALSE, fig.path = "plots/")
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.path = "plots/")
 ```
-Neurogenomics - Task 1
-Giulio Benedetti - YB8191431, Dolev Michaelovich - 207686031
- 
 
 # Part 1
 
