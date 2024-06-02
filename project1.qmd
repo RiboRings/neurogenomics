@@ -1,11 +1,14 @@
 ---
 title: "Neurogenomics Project 1"
-format: pdf
+format: html
 editor: visual
 author:
-  - Dolev Michaelovich (207686031)
-  - Giulio Benedetti (YB8191431)
+  - Dolev Michaelovich
+  - Giulio Benedetti
 ---
+
+This project was published on GitHub
+(https://riborings.github.io/neurogenomics/project1.html).
 
 ```{r}
 #| include: FALSE
