@@ -143,217 +143,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-preparation" class="level2">
 <h2 class="anchored" data-anchor-id="data-preparation">Data Preparation</h2>
 <div class="cell">
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.1     ✔ tibble    3.2.1
-✔ lubridate 1.9.3     ✔ tidyr     1.3.1
-✔ purrr     1.0.2     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
-Загрузка требуемого пакета: SummarizedExperiment
-
-Загрузка требуемого пакета: MatrixGenerics
-
-Загрузка требуемого пакета: matrixStats
-
-
-Присоединяю пакет: 'matrixStats'
-
-
-Следующий объект скрыт от 'package:dplyr':
-
-    count
-
-
-
-Присоединяю пакет: 'MatrixGenerics'
-
-
-Следующие объекты скрыты от 'package:matrixStats':
-
-    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
-    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
-    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
-    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
-    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
-    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
-    colWeightedMeans, colWeightedMedians, colWeightedSds,
-    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
-    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
-    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
-    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
-    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
-    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
-    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
-    rowWeightedSds, rowWeightedVars
-
-
-Загрузка требуемого пакета: GenomicRanges
-
-Загрузка требуемого пакета: stats4
-
-Загрузка требуемого пакета: BiocGenerics
-
-
-Присоединяю пакет: 'BiocGenerics'
-
-
-Следующие объекты скрыты от 'package:lubridate':
-
-    intersect, setdiff, union
-
-
-Следующие объекты скрыты от 'package:dplyr':
-
-    combine, intersect, setdiff, union
-
-
-Следующие объекты скрыты от 'package:stats':
-
-    IQR, mad, sd, var, xtabs
-
-
-Следующие объекты скрыты от 'package:base':
-
-    Filter, Find, Map, Position, Reduce, anyDuplicated, aperm, append,
-    as.data.frame, basename, cbind, colnames, dirname, do.call,
-    duplicated, eval, evalq, get, grep, grepl, intersect, is.unsorted,
-    lapply, mapply, match, mget, order, paste, pmax, pmax.int, pmin,
-    pmin.int, rank, rbind, rownames, sapply, setdiff, table, tapply,
-    union, unique, unsplit, which.max, which.min
-
-
-Загрузка требуемого пакета: S4Vectors</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: пакет 'S4Vectors' был собран под R версии 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Присоединяю пакет: 'S4Vectors'
-
-Следующие объекты скрыты от 'package:lubridate':
-
-    second, second&lt;-
-
-Следующие объекты скрыты от 'package:dplyr':
-
-    first, rename
-
-Следующий объект скрыт от 'package:tidyr':
-
-    expand
-
-Следующий объект скрыт от 'package:utils':
-
-    findMatches
-
-Следующие объекты скрыты от 'package:base':
-
-    I, expand.grid, unname
-
-Загрузка требуемого пакета: IRanges</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: пакет 'IRanges' был собран под R версии 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Присоединяю пакет: 'IRanges'
-
-Следующий объект скрыт от 'package:lubridate':
-
-    %within%
-
-Следующие объекты скрыты от 'package:dplyr':
-
-    collapse, desc, slice
-
-Следующий объект скрыт от 'package:purrr':
-
-    reduce
-
-Загрузка требуемого пакета: GenomeInfoDb
-Загрузка требуемого пакета: Biobase
-Welcome to Bioconductor
-
-    Vignettes contain introductory material; view with
-    'browseVignettes()'. To cite Bioconductor, see
-    'citation("Biobase")', and for packages 'citation("pkgname")'.
-
-
-Присоединяю пакет: 'Biobase'
-
-Следующий объект скрыт от 'package:MatrixGenerics':
-
-    rowMedians
-
-Следующие объекты скрыты от 'package:matrixStats':
-
-    anyMissing, rowMedians
-
-Загрузка требуемого пакета: scuttle</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: пакет 'scater' был собран под R версии 4.4.1</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Загрузка требуемого пакета: ggrepel
-
-Присоединяю пакет: 'PCAtools'
-
-Следующий объект скрыт от 'package:scran':
-
-    parallelPCA
-
-Следующие объекты скрыты от 'package:stats':
-
-    biplot, screeplot</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>expression_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/assay.csv"</span>, <span class="at">row.names =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>location_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/location.csv"</span>, <span class="at">row.names =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>expression_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/assay.csv"</span>, <span class="at">row.names =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>location_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/location.csv"</span>, <span class="at">row.names =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">SingleCellExperiment</span>(<span class="at">assay =</span> <span class="fu">list</span>(<span class="at">counts =</span> expression_data),</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">colData =</span> location_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">SingleCellExperiment</span>(<span class="at">assay =</span> <span class="fu">list</span>(<span class="at">counts =</span> expression_data),</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">colData =</span> location_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="normalisation" class="level2">
 <h2 class="anchored" data-anchor-id="normalisation">Normalisation</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>clust <span class="ot">&lt;-</span> <span class="fu">quickCluster</span>(sce)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">computeSumFactors</span>(sce, <span class="at">cluster =</span> clust, <span class="at">min.mean =</span> <span class="fl">0.1</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">logNormCounts</span>(sce)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>clust <span class="ot">&lt;-</span> <span class="fu">quickCluster</span>(sce)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">computeSumFactors</span>(sce, <span class="at">cluster =</span> clust, <span class="at">min.mean =</span> <span class="fl">0.1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">logNormCounts</span>(sce)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="feature-selection" class="level2">
 <h2 class="anchored" data-anchor-id="feature-selection">Feature Selection</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dec <span class="ot">&lt;-</span> <span class="fu">modelGeneVar</span>(sce)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">metadata</span>(dec)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit<span class="sc">$</span>mean, fit<span class="sc">$</span>var,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Mean log Expression"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Variance of log Expression"</span>)</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(fit<span class="sc">$</span><span class="fu">trend</span>(x), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dec <span class="ot">&lt;-</span> <span class="fu">modelGeneVar</span>(sce)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">metadata</span>(dec)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit<span class="sc">$</span>mean, fit<span class="sc">$</span>var,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Mean log Expression"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Variance of log Expression"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(fit<span class="sc">$</span><span class="fu">trend</span>(x), <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="breast_cancer_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>hvg <span class="ot">&lt;-</span> <span class="fu">getTopHVGs</span>(dec)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>hvg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hvg <span class="ot">&lt;-</span> <span class="fu">getTopHVGs</span>(dec)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hvg</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  [1] "IGHG1"    "IGHG4"    "FAT1"     "IGKC"     "FGFR4"    "LST1"    
   [7] "HIF1A"    "MAPK3"    "TFRC"     "FN1"      "PTTG1"    "S100A8"  
@@ -383,56 +210,56 @@ Welcome to Bioconductor
 <section id="dimensionality-reduction" class="level2">
 <h2 class="anchored" data-anchor-id="dimensionality-reduction">Dimensionality Reduction</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">runPCA</span>(sce,</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">assay.type =</span> <span class="st">"logcounts"</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncomp =</span> <span class="dv">20</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>pca.vars <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="fu">reducedDim</span>(sce, <span class="st">"PCA"</span>), <span class="st">"percentVar"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>chosen.elbow <span class="ot">&lt;-</span> <span class="fu">findElbowPoint</span>(pca.vars)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>pca.cum.vars <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(pca.vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">runPCA</span>(sce,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">assay.type =</span> <span class="st">"logcounts"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">ncomp =</span> <span class="dv">20</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>pca.vars <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="fu">reducedDim</span>(sce, <span class="st">"PCA"</span>), <span class="st">"percentVar"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>chosen.elbow <span class="ot">&lt;-</span> <span class="fu">findElbowPoint</span>(pca.vars)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>pca.cum.vars <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(pca.vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pca.vars, <span class="at">xlab =</span> <span class="st">"PC"</span>, <span class="at">ylab =</span> <span class="st">"Explained Variance (%)"</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> chosen.elbow, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pca.cum.vars,</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"PC"</span>,</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Explained Variance (%)"</span>,</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">40</span>, <span class="at">col=</span><span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pca.vars, <span class="at">xlab =</span> <span class="st">"PC"</span>, <span class="at">ylab =</span> <span class="st">"Explained Variance (%)"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> chosen.elbow, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pca.cum.vars,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"PC"</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Explained Variance (%)"</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">40</span>, <span class="at">col=</span><span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="breast_cancer_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>max.idx <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(sce, <span class="st">"logcounts"</span>), <span class="dv">2</span>, which.max)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>max.genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(sce)[max.idx]</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>top.genes <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">sort</span>(<span class="fu">table</span>(max.genes), <span class="at">decreasing =</span> <span class="cn">TRUE</span>))[<span class="fu">seq</span>(<span class="dv">5</span>)]</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>max.genes[<span class="sc">!</span>(max.genes <span class="sc">%in%</span> top.genes)] <span class="ot">&lt;-</span> <span class="st">"Other"</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>TopGene <span class="ot">&lt;-</span> max.genes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>max.idx <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="fu">assay</span>(sce, <span class="st">"logcounts"</span>), <span class="dv">2</span>, which.max)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>max.genes <span class="ot">&lt;-</span> <span class="fu">rownames</span>(sce)[max.idx]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>top.genes <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">sort</span>(<span class="fu">table</span>(max.genes), <span class="at">decreasing =</span> <span class="cn">TRUE</span>))[<span class="fu">seq</span>(<span class="dv">5</span>)]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>max.genes[<span class="sc">!</span>(max.genes <span class="sc">%in%</span> top.genes)] <span class="ot">&lt;-</span> <span class="st">"Other"</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>TopGene <span class="ot">&lt;-</span> max.genes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce, <span class="st">"PCA"</span>, <span class="at">colour_by =</span> <span class="st">"TopGene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce, <span class="st">"PCA"</span>, <span class="at">colour_by =</span> <span class="st">"TopGene"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="breast_cancer_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">runTSNE</span>(sce, <span class="at">dimred =</span> <span class="st">"PCA"</span>, <span class="at">n_dimred =</span> <span class="dv">10</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">runUMAP</span>(sce, <span class="at">dimred =</span> <span class="st">"PCA"</span>, <span class="at">n_dimred =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">runTSNE</span>(sce, <span class="at">dimred =</span> <span class="st">"PCA"</span>, <span class="at">n_dimred =</span> <span class="dv">10</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>sce <span class="ot">&lt;-</span> <span class="fu">runUMAP</span>(sce, <span class="at">dimred =</span> <span class="st">"PCA"</span>, <span class="at">n_dimred =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tsne <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce, <span class="st">"TSNE"</span>, <span class="at">colour_by =</span> <span class="st">"TopGene"</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce, <span class="st">"UMAP"</span>, <span class="at">colour_by=</span><span class="st">"TopGene"</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>tsne <span class="sc">+</span> umap <span class="sc">+</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tsne <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce, <span class="st">"TSNE"</span>, <span class="at">colour_by =</span> <span class="st">"TopGene"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce, <span class="st">"UMAP"</span>, <span class="at">colour_by=</span><span class="st">"TopGene"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>tsne <span class="sc">+</span> umap <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="breast_cancer_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -440,6 +267,108 @@ Welcome to Bioconductor
 </section>
 <section id="clustering" class="level2">
 <h2 class="anchored" data-anchor-id="clustering">Clustering</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>kclust <span class="ot">&lt;-</span> <span class="fu">clusterCells</span>(sce,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">use.dimred =</span> <span class="st">"PCA"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">BLUSPARAM =</span> <span class="fu">TwoStepParam</span>(<span class="at">first =</span> <span class="fu">KmeansParam</span>(<span class="at">centers =</span> <span class="dv">1000</span>),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">second =</span> <span class="fu">NNGraphParam</span>(<span class="at">k =</span> <span class="dv">10</span>)),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>Cluster <span class="ot">&lt;-</span> kclust<span class="sc">$</span>cluster</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(sce<span class="sc">$</span>Cluster)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+  1   2   3   4   5   6 
+568 326 766 511 318 259 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce, <span class="st">"UMAP"</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">colour_by =</span> <span class="st">"Cluster"</span>,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">text_by =</span> <span class="st">"Cluster"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="breast_cancer_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="marker-gene-detection" class="level2">
+<h2 class="anchored" data-anchor-id="marker-gene-detection">Marker Gene Detection</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>marker.info <span class="ot">&lt;-</span> <span class="fu">scoreMarkers</span>(sce, sce<span class="sc">$</span>Cluster)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>marker.genes <span class="ot">&lt;-</span> <span class="fu">lapply</span>(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  marker.info,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(x) <span class="fu">rownames</span>(x)[<span class="fu">order</span>(x<span class="sc">$</span>mean.AUC, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)][<span class="fu">seq</span>(<span class="dv">5</span>)]</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>marker.genes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`1`
+[1] "IGHG1" "IGHG4" "FAT1"  "IGKC"  "FGFR4"
+
+$`2`
+[1] "FN1"   "HLA.B" "ACTA2" "KIF23" "GNG11"
+
+$`3`
+[1] "KRT19" "KRT18" "TFF1"  "MYL6"  "HSPB1"
+
+$`4`
+[1] "CD24"   "FOS"    "COL3A1" "LYZ"    "ZNF571"
+
+$`5`
+[1] "SULF1" "HIF1A" "FOXP3" "MLPH"  "APOE" 
+
+$`6`
+[1] "TFRC"  "KRT19" "FASN"  "TFF1"  "KRT18"</code></pre>
+</div>
+</div>
+</section>
+<section id="cell-type-annotation" class="level2">
+<h2 class="anchored" data-anchor-id="cell-type-annotation">Cell Type Annotation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>cell.types <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"B cell"</span>, <span class="st">"Fibroblast"</span>, <span class="st">"Tumour Core"</span>, <span class="st">"Tumour Edge"</span>, <span class="st">"T cell"</span>, <span class="st">"Tumour Core"</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>CellType <span class="ot">&lt;-</span> <span class="fu">sapply</span>(sce<span class="sc">$</span>Cluster, <span class="cf">function</span>(x) cell.types[x])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce, <span class="st">"UMAP"</span>, <span class="at">colour_by =</span> <span class="st">"CellType"</span>, <span class="at">text_by =</span> <span class="st">"Cluster"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>spatial <span class="ot">&lt;-</span> <span class="fu">plotColData</span>(sce, <span class="st">"Y"</span>, <span class="st">"X"</span>, <span class="at">colour_by =</span> <span class="st">"CellType"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>umap <span class="sc">+</span> spatial <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">"collect"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="breast_cancer_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>cluster 4 has cd24 but also lyz so it might be the battlefield where tumour and macrophages meet.</p>
+<p>question 1</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(sce<span class="sc">$</span>CellType) <span class="sc">/</span> <span class="fu">ncol</span>(sce) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+     B cell  Fibroblast      T cell Tumour Core Tumour Edge 
+   20.66958    11.86317    11.57205    37.29985    18.59534 </code></pre>
+</div>
+</div>
+<p>question 2</p>
+<p>mixed but tumour tries to bulk</p>
+<p>question 3</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">assay</span>(sce, <span class="st">"logcounts"</span>)[<span class="st">"CD274"</span>, ] <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">ncol</span>(sce) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 11.46288</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotExpression</span>(sce, <span class="at">features =</span> <span class="st">"CD274"</span>, <span class="at">colour_by =</span> <span class="st">"CellType"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="breast_cancer_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
 </section>

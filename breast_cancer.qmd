@@ -11,13 +11,14 @@ author:
 ## Data Preparation
 
 ```{r}
-#| echo: false
+#| include: false
 library(tidyverse)
 library(SingleCellExperiment)
 library(scran)
 library(scater)
 library(PCAtools)
 library(patchwork)
+library(bluster)
 ```
 
 ```{r}
@@ -115,3 +116,78 @@ tsne + umap +
 ```
 
 ## Clustering
+
+```{r}
+set.seed(100)
+
+kclust <- clusterCells(sce,
+                       use.dimred = "PCA",
+                       BLUSPARAM = TwoStepParam(first = KmeansParam(centers = 1000),
+                                                second = NNGraphParam(k = 10)),
+                       full = TRUE)
+
+sce$Cluster <- kclust$cluster
+table(sce$Cluster)
+```
+
+```{r}
+plotReducedDim(sce, "UMAP",
+               colour_by = "Cluster",
+               text_by = "Cluster")
+```
+
+## Marker Gene Detection
+
+```{r}
+marker.info <- scoreMarkers(sce, sce$Cluster)
+
+marker.genes <- lapply(
+  marker.info,
+  function(x) rownames(x)[order(x$mean.AUC, decreasing = TRUE)][seq(5)]
+)
+
+marker.genes
+```
+
+## Cell Type Annotation
+
+
+```{r}
+cell.types <- c("B cell", "Fibroblast", "Tumour Core", "Tumour Edge", "T cell", "Tumour Core")
+sce$CellType <- sapply(sce$Cluster, function(x) cell.types[x])
+```
+
+```{r}
+umap <- plotReducedDim(sce, "UMAP", colour_by = "CellType", text_by = "Cluster")
+spatial <- plotColData(sce, "Y", "X", colour_by = "CellType")
+
+umap + spatial +
+  plot_layout(guides = "collect")
+```
+
+## Discussion
+
+cluster 4 has cd24 but also lyz so it might be the battlefield where tumour and macrophages meet.
+
+question 1
+
+```{r}
+table(sce$CellType) / ncol(sce) * 100
+```
+
+question 2
+
+mixed but tumour tries to bulk
+
+question 3
+
+```{r}
+sum(assay(sce, "logcounts")["CD274", ] != 0) / ncol(sce) * 100
+```
+
+
+```{r}
+plotExpression(sce, features = "CD274", colour_by = "CellType")
+```
+
+
