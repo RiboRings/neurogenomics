@@ -1,0 +1,117 @@
+---
+title: "Breast Cancer Analysis"
+format: html
+editor: visual
+date: today
+author:
+  - Dolev Michaelovich
+  - Giulio Benedetti
+---
+
+## Data Preparation
+
+```{r}
+#| echo: false
+library(tidyverse)
+library(SingleCellExperiment)
+library(scran)
+library(scater)
+library(PCAtools)
+library(patchwork)
+```
+
+```{r}
+expression_data <- read.csv("data/assay.csv", row.names = 1) %>%
+  as.matrix() %>%
+  t()
+
+location_data <- read.csv("data/location.csv", row.names = 1)
+```
+
+```{r}
+sce <- SingleCellExperiment(assay = list(counts = expression_data),
+                            colData = location_data)
+```
+
+## Normalisation
+
+```{r}
+set.seed(100)
+clust <- quickCluster(sce)
+sce <- computeSumFactors(sce, cluster = clust, min.mean = 0.1)
+sce <- logNormCounts(sce)
+```
+
+## Feature Selection
+
+```{r}
+dec <- modelGeneVar(sce)
+fit <- metadata(dec)
+
+plot(fit$mean, fit$var,
+     xlab = "Mean log Expression",
+     ylab = "Variance of log Expression")
+
+curve(fit$trend(x), col = "red", add = TRUE, lwd = 2)
+```
+
+```{r}
+hvg <- getTopHVGs(dec)
+hvg
+```
+
+## Dimensionality Reduction
+
+```{r}
+sce <- runPCA(sce,
+              assay.type = "logcounts",
+              ncomp = 20)
+
+pca.vars <- attr(reducedDim(sce, "PCA"), "percentVar")
+chosen.elbow <- findElbowPoint(pca.vars)
+pca.cum.vars <- cumsum(pca.vars)
+```
+
+```{r}
+par(mfrow = c(1, 2))
+
+plot(pca.vars, xlab = "PC", ylab = "Explained Variance (%)")
+abline(v = chosen.elbow, col = "red", lty = 2)
+
+plot(pca.cum.vars,
+     xlab = "PC",
+     ylab = "Explained Variance (%)",
+     ylim = c(0, 100))
+
+abline(h = 40, col="red", lty = 2)
+grid()
+```
+
+```{r}
+max.idx <- apply(assay(sce, "logcounts"), 2, which.max)
+max.genes <- rownames(sce)[max.idx]
+top.genes <- names(sort(table(max.genes), decreasing = TRUE))[seq(5)]
+max.genes[!(max.genes %in% top.genes)] <- "Other"
+sce$TopGene <- max.genes
+```
+
+```{r}
+plotReducedDim(sce, "PCA", colour_by = "TopGene")
+```
+
+```{r}
+set.seed(100)
+
+sce <- runTSNE(sce, dimred = "PCA", n_dimred = 10)
+sce <- runUMAP(sce, dimred = "PCA", n_dimred = 10)
+```
+
+```{r}
+tsne <- plotReducedDim(sce, "TSNE", colour_by = "TopGene")
+umap <- plotReducedDim(sce, "UMAP", colour_by="TopGene")
+
+tsne + umap +
+  plot_layout(guides = "collect")
+```
+
+## Clustering

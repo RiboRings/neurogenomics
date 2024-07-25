@@ -6,4 +6,5 @@ editor: visual
 
 Projects:
 
-- [Project 1](https://riborings.github.io/neurogenomics/project1.html)
+-   [Project 1](https://riborings.github.io/neurogenomics/project1.html)
+-   [Project 4](https://riborings.github.io/neurogenomics/breast_cancer.html)

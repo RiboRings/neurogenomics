@@ -4,3 +4,4 @@ project:
   render:
     - index.qmd
     - project1.qmd
+    - breast_cancer.qmd
