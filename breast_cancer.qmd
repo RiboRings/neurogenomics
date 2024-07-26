@@ -11,7 +11,9 @@ author:
 ## Data Preparation
 
 ```{r}
-#| include: false
+#| message: false
+#| warning: false
+# Import libraries
 library(tidyverse)
 library(SingleCellExperiment)
 library(scran)
@@ -22,14 +24,17 @@ library(bluster)
 ```
 
 ```{r}
+# Read assay
 expression_data <- read.csv("data/assay.csv", row.names = 1) %>%
   as.matrix() %>%
   t()
 
+# Read colData
 location_data <- read.csv("data/location.csv", row.names = 1)
 ```
 
 ```{r}
+# Build SCE object
 sce <- SingleCellExperiment(assay = list(counts = expression_data),
                             colData = location_data)
 ```
@@ -38,17 +43,25 @@ sce <- SingleCellExperiment(assay = list(counts = expression_data),
 
 ```{r}
 set.seed(100)
+
+# Normalise by cluster library size
 clust <- quickCluster(sce)
 sce <- computeSumFactors(sce, cluster = clust, min.mean = 0.1)
+
+# Scale and log transform counts
 sce <- logNormCounts(sce)
 ```
 
 ## Feature Selection
 
 ```{r}
+# Model gene variation
 dec <- modelGeneVar(sce)
 fit <- metadata(dec)
+```
 
+```{r}
+# Visualise model fit to gene variation
 plot(fit$mean, fit$var,
      xlab = "Mean log Expression",
      ylab = "Variance of log Expression")
@@ -57,6 +70,7 @@ curve(fit$trend(x), col = "red", add = TRUE, lwd = 2)
 ```
 
 ```{r}
+# Order genes by variability
 hvg <- getTopHVGs(dec)
 hvg
 ```
@@ -64,21 +78,34 @@ hvg
 ## Dimensionality Reduction
 
 ```{r}
+# Perform PCA
 sce <- runPCA(sce,
               assay.type = "logcounts",
               ncomp = 20)
 
+# Retrieve percent explained variance
 pca.vars <- attr(reducedDim(sce, "PCA"), "percentVar")
+
+# Find elbow
 chosen.elbow <- findElbowPoint(pca.vars)
+
+# Find cumulative explained variance
 pca.cum.vars <- cumsum(pca.vars)
 ```
 
 ```{r}
+#| label: fig-pcomp
+#| fig-cap: Variance explained by PCs. On the left, individual variances
+#|   explained by the first 20 PCs with the elbow marked by a vertical red
+#|   dashed line. On the right, the cumulative variance explained by the first n
+#|   PCs with a 40% threshold marked by a horizontal red dashed line.
 par(mfrow = c(1, 2))
 
+# Visualise elbow
 plot(pca.vars, xlab = "PC", ylab = "Explained Variance (%)")
 abline(v = chosen.elbow, col = "red", lty = 2)
 
+# Visualise cumulative explained variance
 plot(pca.cum.vars,
      xlab = "PC",
      ylab = "Explained Variance (%)",
@@ -89,28 +116,47 @@ grid()
 ```
 
 ```{r}
+# Find top expressed gene for every cell
 max.idx <- apply(assay(sce, "logcounts"), 2, which.max)
 max.genes <- rownames(sce)[max.idx]
+
+# Find top 5 expressed genes across assay
 top.genes <- names(sort(table(max.genes), decreasing = TRUE))[seq(5)]
 max.genes[!(max.genes %in% top.genes)] <- "Other"
+
+# Store top expressed gene
 sce$TopGene <- max.genes
 ```
 
 ```{r}
+#| label: fig-pca
+#| fig-cap: PCA plot coloured by top expressed gene.
+# Visualise PCA
 plotReducedDim(sce, "PCA", colour_by = "TopGene")
 ```
 
 ```{r}
 set.seed(100)
 
+# Perform TSNE on the first 10 PCs
 sce <- runTSNE(sce, dimred = "PCA", n_dimred = 10)
+# Perform UMAP on the first 10 PCs
 sce <- runUMAP(sce, dimred = "PCA", n_dimred = 10)
 ```
 
 ```{r}
+#| label: fig-ord
+#| fig-cap: Non-linear dimensionality reduction. On the left, a TSNE plot with a
+#|   default perplexity of 30. On the right, a UMAP plot with default number of
+#|   neighbours of 15 and minimum distance between embedded points of 0.01.
+#|   Cells are coloured by their top expressed gene.
+
+# Generate TSNE plot
 tsne <- plotReducedDim(sce, "TSNE", colour_by = "TopGene")
+# Generate UMAP plot
 umap <- plotReducedDim(sce, "UMAP", colour_by="TopGene")
 
+# Visualise TSNE and UMAP
 tsne + umap +
   plot_layout(guides = "collect")
 ```
@@ -120,17 +166,28 @@ tsne + umap +
 ```{r}
 set.seed(100)
 
+# Cluster cells
 kclust <- clusterCells(sce,
                        use.dimred = "PCA",
                        BLUSPARAM = TwoStepParam(first = KmeansParam(centers = 1000),
                                                 second = NNGraphParam(k = 10)),
                        full = TRUE)
 
+# Store clustering results
 sce$Cluster <- kclust$cluster
-table(sce$Cluster)
+
+# View cluster counts
+tab <- table(sce$Cluster)
+knitr::kable(tab, col.names = c("Cluster", "Count"))
 ```
 
 ```{r}
+#| label: fig-umap
+#| fig-cap: Clustering results. UMAP plot of cells coloured by their assigned
+#|   clusters. Cells were clustered with a two-step approach (kmeans and
+#|   graph-based) based on the first PCs.
+
+# Visualise UMAP of clustered cells
 plotReducedDim(sce, "UMAP",
                colour_by = "Cluster",
                text_by = "Cluster")
@@ -139,55 +196,112 @@ plotReducedDim(sce, "UMAP",
 ## Marker Gene Detection
 
 ```{r}
+# Score marker genes by cluster
 marker.info <- scoreMarkers(sce, sce$Cluster)
 
+# Find top 5 marker genes for every cluster based on mean AUC score
 marker.genes <- lapply(
   marker.info,
   function(x) rownames(x)[order(x$mean.AUC, decreasing = TRUE)][seq(5)]
 )
 
+# View top 5 marker genes by cluster
 marker.genes
 ```
 
 ## Cell Type Annotation
 
-
 ```{r}
+# Infer cell type manually
 cell.types <- c("B cell", "Fibroblast", "Tumour Core", "Tumour Edge", "T cell", "Tumour Core")
+# Store cell type
 sce$CellType <- sapply(sce$Cluster, function(x) cell.types[x])
 ```
 
 ```{r}
+#| label: fig-umap-spatial
+#| fig-cap: Results of cell type annotation. On the left, a UMAP plot of the
+#|   annotated cells coloured by their inferred cell type. Numbers represent
+#|   the centre of each previously found cluster. On the right, cells in their
+#|   original 2D space of the breast tissue.
+
+# Generate UMAP plot
 umap <- plotReducedDim(sce, "UMAP", colour_by = "CellType", text_by = "Cluster")
+# Generate colData plot
 spatial <- plotColData(sce, "Y", "X", colour_by = "CellType")
 
+# Visualise UMAP and colData plots
 umap + spatial +
   plot_layout(guides = "collect")
 ```
 
+Cluster 4 has cd24 but also lyz so it might be the battlefield where tumour and macrophages meet.
+
 ## Discussion
 
-cluster 4 has cd24 but also lyz so it might be the battlefield where tumour and macrophages meet.
+### Question 1
 
-question 1
-
-```{r}
-table(sce$CellType) / ncol(sce) * 100
-```
-
-question 2
-
-mixed but tumour tries to bulk
-
-question 3
+Based on our manual annotation, more than 30% of the assay consists of B or T
+cells. Thus, the percentage of immune cells likely surpasses 10% even if some
+margin of error is considered.
 
 ```{r}
-sum(assay(sce, "logcounts")["CD274", ] != 0) / ncol(sce) * 100
+# Compute percentage of cell types
+tab <- table(sce$CellType) / ncol(sce) * 100
+
+knitr::kable(tab,
+             digits = 2,
+             col.names = c("Cell Type", "Abundance (%)"))
 ```
 
+### Question 2
+
+B and T cells appear to intermix with the tumour cells to a large extent. The spatial distribution illustrated by Fig @fig-umap-spatial suggests that immune
+cells attempt to infiltrate the small agglomerations formed by the tumour cells,
+which reflects a positive response of the immune system against the tumour.
+
+### Question 3
+
+More than 10% of the cells in the assay express at least 1 copy of the PD-L1
+gene, which corresponds to a non-null log-count as computed below. Also within
+only T cells, at least 10% of them express the PD-L1 gene.
 
 ```{r}
-plotExpression(sce, features = "CD274", colour_by = "CellType")
+# Compute percentage of PD-L1+ cells
+tab1 <- table(assay(sce, "logcounts")["CD274", ] != 0) / ncol(sce) * 100
+
+# Compute percentage of PD-L1+ T cells
+sce.tcell <- sce[ , sce$CellType == "T cell"]
+tab2 <- table(assay(sce.tcell, "logcounts")["CD274", ] != 0) /
+  sum(ncol(sce.tcell)) * 100
+
+# Combine tables
+tab <- rbind(tab1, tab2)
+rownames(tab) <- c("All Cells", "T Cells")
+colnames(tab) <- c("PD-L1-", "PD-L1+")
+
+# View results
+knitr::kable(tab, digits = 2)
 ```
 
+@fig-exp illustrates the distribution of PD-L1 expression across different cell
+types.
 
+```{r}
+#| label: fig-exp
+#| fig-cap: Distribution of PD-L1 log-norm expression across all cells grouped
+#|   and coloured by annotated cell type.
+
+# Visualise expression of PD-L1
+plotExpression(sce, features = "CD274", x = "CellType", colour_by = "CellType")
+```
+
+## Conclusion
+
+The current study aimed to annotate cells from a tissue of breast cancer
+analysed with scRNA-seq in order to predict the patient's response to checkpoint
+inhibitory therapy. Overall, the analyses provided all the indicators for a
+positive response: 1) immune cells make up about 30% of the tissue, 2) they are
+intermixed with the tumour and 3) about 10% of all cells (as well as T cells)
+express the PD-L1 gene. Taken altogether, the patient is expected to respond
+well to checkpoint inhibitory therapy.
