@@ -8,13 +8,18 @@ author:
   - Giulio Benedetti
 ---
 
+This analysis aims at predicting whether checkpoint inhibition therapy should
+be administered to a breast cancer patient based on their genetic expression
+profile.
+
 ## Data Preparation
+
+The necessary libraries are imported to set up the environment.
 
 ```{r}
 #| message: false
 #| warning: false
 # Import libraries
-library(tidyverse)
 library(SingleCellExperiment)
 library(scran)
 library(scater)
@@ -23,23 +28,35 @@ library(patchwork)
 library(bluster)
 ```
 
+The expression table and the location metadata are read in.
+
 ```{r}
 # Read assay
-expression_data <- read.csv("data/assay.csv", row.names = 1) %>%
-  as.matrix() %>%
+expression_data <- read.csv("data/assay.csv", row.names = 1) |>
+  as.matrix() |>
   t()
 
 # Read colData
 location_data <- read.csv("data/location.csv", row.names = 1)
 ```
 
+A `SingleCellExperiment` object is constructed from the assay and its
+corresponding colData.
+
 ```{r}
 # Build SCE object
 sce <- SingleCellExperiment(assay = list(counts = expression_data),
                             colData = location_data)
+
+sce
 ```
 
+The experiment includes `r ncol(sce)` cells which express `r nrow(sce)` genes.
+
 ## Normalisation
+
+The counts assay is normalised with the log-norm transformation to make cells
+comparable and focus on logarithmic changes in expression.
 
 ```{r}
 set.seed(100)
@@ -54,13 +71,26 @@ sce <- logNormCounts(sce)
 
 ## Feature Selection
 
+Cells are modelled by their variability to determine whether a few Highly
+Variable Genes (HVGs) could be selected to represent cells.
+
 ```{r}
 # Model gene variation
 dec <- modelGeneVar(sce)
 fit <- metadata(dec)
 ```
 
+There are a few genes that show much greater variability than others
+(@fig-model). In particular, genes above the red line provide a certain extent
+of biological variance after excluding technical variance (red line). However,
+we decided to keep all of them in further analyses due to the relatively small
+size of the experiment, which might have been pre-filtered.
+
 ```{r}
+#| label: fig-model
+#| fig-cap: Model of the variance for each gene in terms of its log-expression
+#|   profile. Every dot is a gene and the red line represents the baseline
+#|   technical component.
 # Visualise model fit to gene variation
 plot(fit$mean, fit$var,
      xlab = "Mean log Expression",
@@ -69,6 +99,10 @@ plot(fit$mean, fit$var,
 curve(fit$trend(x), col = "red", add = TRUE, lwd = 2)
 ```
 
+Genes are sorted by their variability to explore which genes might be used later
+to annotate clusters to the correct cell types. The first two, IGHG1 and IGHG4
+represent B cell marker genes.
+
 ```{r}
 # Order genes by variability
 hvg <- getTopHVGs(dec)
@@ -76,6 +110,10 @@ hvg
 ```
 
 ## Dimensionality Reduction
+
+Currently, cells are characterised by a large number of dimensions
+(`r nrow(sce)` genes). To select highly explanatory features and reduce noise,
+we perform Principal Component Analysis (PCA) on the assay.
 
 ```{r}
 # Perform PCA
@@ -92,6 +130,11 @@ chosen.elbow <- findElbowPoint(pca.vars)
 # Find cumulative explained variance
 pca.cum.vars <- cumsum(pca.vars)
 ```
+
+The number of PCs for further analyses was determined by the percentage of
+explained variance in relation to the number of PCs (@fig-pcomp). The first 7
+PCs seem sufficient based on the elbow rule, whereas the first 9 PCs can explain more than 40% of the variance based on cumulative explained variance. Therefore, we reasoned that the first 10 PCs would provide an acceptable tradeoff between
+dimensionality and explained variance.
 
 ```{r}
 #| label: fig-pcomp
@@ -115,6 +158,10 @@ abline(h = 40, col="red", lty = 2)
 grid()
 ```
 
+For exploratory purposes, the most expressed gene in every cell was found. Cells
+whose most expressed gene was different from the top 5 genes across the entire
+assay were labelled as "Other".
+
 ```{r}
 # Find top expressed gene for every cell
 max.idx <- apply(assay(sce, "logcounts"), 2, which.max)
@@ -128,12 +175,24 @@ max.genes[!(max.genes %in% top.genes)] <- "Other"
 sce$TopGene <- max.genes
 ```
 
+The performance of PCA was roughly assessed by visualising the cells in the
+first four PCs coloured by their most expressed gene (@fig-pca). The first PC
+seems to encode most of the variance between IGHG1/IGHG4+ cells and other cells
+in terms of most expressed gene, whereas higher PCs might encode different
+information.
+
 ```{r}
 #| label: fig-pca
-#| fig-cap: PCA plot coloured by top expressed gene.
+#| fig-cap: PCA plots with the first four PCs and cells coloured by their most
+#|   expressed gene.
 # Visualise PCA
-plotReducedDim(sce, "PCA", colour_by = "TopGene")
+plotReducedDim(sce, "PCA",
+               ncomp = 4,
+               colour_by = "TopGene")
 ```
+
+The first 10 PCs are fed to TSNE and UMAP to further identify groups of cells
+and their relative position.
 
 ```{r}
 set.seed(100)
@@ -143,6 +202,12 @@ sce <- runTSNE(sce, dimred = "PCA", n_dimred = 10)
 # Perform UMAP on the first 10 PCs
 sce <- runUMAP(sce, dimred = "PCA", n_dimred = 10)
 ```
+
+Both TSNE and UMAP could identify the IGHG1/IGHG4+ group of cells previously
+found in PCA (@fig-ord). This is encoded by the second axis in TSNE and the
+first axis in UMAP, respectively. Compared to PCA, TSNE and UMAP provided a
+better separation between other groups of cells, such as the HIF1A+, LYZ and
+other cells.
 
 ```{r}
 #| label: fig-ord
@@ -241,9 +306,7 @@ Cluster 4 has cd24 but also lyz so it might be the battlefield where tumour and 
 
 ### Question 1
 
-Based on our manual annotation, more than 30% of the assay consists of B or T
-cells. Thus, the percentage of immune cells likely surpasses 10% even if some
-margin of error is considered.
+Based on our manual annotation, more than 30% of the assay consists of B or T cells. Thus, the percentage of immune cells likely surpasses 10% even if some margin of error is considered.
 
 ```{r}
 # Compute percentage of cell types
@@ -256,15 +319,11 @@ knitr::kable(tab,
 
 ### Question 2
 
-B and T cells appear to intermix with the tumour cells to a large extent. The spatial distribution illustrated by Fig @fig-umap-spatial suggests that immune
-cells attempt to infiltrate the small agglomerations formed by the tumour cells,
-which reflects a positive response of the immune system against the tumour.
+B and T cells appear to intermix with the tumour cells to a large extent. The spatial distribution illustrated by Fig @fig-umap-spatial suggests that immune cells attempt to infiltrate the small agglomerations formed by the tumour cells, which reflects a positive response of the immune system against the tumour.
 
 ### Question 3
 
-More than 10% of the cells in the assay express at least 1 copy of the PD-L1
-gene, which corresponds to a non-null log-count as computed below. Also within
-only T cells, at least 10% of them express the PD-L1 gene.
+More than 10% of the cells in the assay express at least 1 copy of the PD-L1 gene, which corresponds to a non-null log-count as computed below. Also within only T cells, at least 10% of them express the PD-L1 gene.
 
 ```{r}
 # Compute percentage of PD-L1+ cells
@@ -284,8 +343,7 @@ colnames(tab) <- c("PD-L1-", "PD-L1+")
 knitr::kable(tab, digits = 2)
 ```
 
-@fig-exp illustrates the distribution of PD-L1 expression across different cell
-types.
+@fig-exp illustrates the distribution of PD-L1 expression across different cell types.
 
 ```{r}
 #| label: fig-exp
@@ -298,10 +356,4 @@ plotExpression(sce, features = "CD274", x = "CellType", colour_by = "CellType")
 
 ## Conclusion
 
-The current study aimed to annotate cells from a tissue of breast cancer
-analysed with scRNA-seq in order to predict the patient's response to checkpoint
-inhibitory therapy. Overall, the analyses provided all the indicators for a
-positive response: 1) immune cells make up about 30% of the tissue, 2) they are
-intermixed with the tumour and 3) about 10% of all cells (as well as T cells)
-express the PD-L1 gene. Taken altogether, the patient is expected to respond
-well to checkpoint inhibitory therapy.
+The current study aimed to annotate cells from a tissue of breast cancer analysed with scRNA-seq in order to predict the patient's response to checkpoint inhibitory therapy. Overall, the analyses provided all the indicators for a positive response: 1) immune cells make up about 30% of the tissue, 2) they are intermixed with the tumour and 3) about 10% of all cells (as well as T cells) express the PD-L1 gene. Taken altogether, the patient is expected to respond well to checkpoint inhibitory therapy.
