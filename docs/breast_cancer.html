@@ -8,7 +8,7 @@
 
 <meta name="author" content="Dolev Michaelovich">
 <meta name="author" content="Giulio Benedetti">
-<meta name="dcterms.date" content="2024-07-28">
+<meta name="dcterms.date" content="2024-07-30">
 
 <title>Breast Cancer Analysis</title>
 <style>
@@ -130,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 28, 2024</p>
+      <p class="date">July 30, 2024</p>
     </div>
   </div>
   
@@ -358,6 +358,7 @@ altExpNames(0):</code></pre>
 </section>
 <section id="clustering" class="level2">
 <h2 class="anchored" data-anchor-id="clustering">Clustering</h2>
+<p>Groups of cells with similar expression profiles can be found by clustering. Then, they can be annotated with the most appropriate cell type based on which marker genes they express. Cells were clustered based on the first PCs with a two-step approach involving K-means and network-graph algorithms. The former serves to speed up clustering by finding the initial 1000 centers, while the latter aims to merge and refine the cells to a maximum of 10 clusters. As a result, we obtain 6 clusters of variable size from about 200 to 800 cells.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -411,6 +412,7 @@ altExpNames(0):</code></pre>
 </table>
 </div>
 </div>
+<p>The six clusters span different regions of the UMAP space (<a href="#fig-umap">Figure&nbsp;5</a>). Some of the clusters, especially cluster 1, match the groups previously defined by most expressed gene. However, it is clear that more complex information is encoded by the clustering than by top gene stratification.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualise UMAP of clustered cells</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce, <span class="st">"UMAP"</span>,</span>
@@ -428,6 +430,7 @@ altExpNames(0):</code></pre>
 </section>
 <section id="marker-gene-detection" class="level2">
 <h2 class="anchored" data-anchor-id="marker-gene-detection">Marker Gene Detection</h2>
+<p>Marker genes are detected by pairwise comparisons of gene expression between clusters. Then, the average effect sizes across all comparisons are computed with several scores. Here, we use the mean AUC as an estimate to assess the importance of a marker gene for each cluster. For simplicity, only the top 5 marker genes in terms of mean AUC were considered for every cluster.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Score marker genes by cluster</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>marker.info <span class="ot">&lt;-</span> <span class="fu">scoreMarkers</span>(sce, sce<span class="sc">$</span>Cluster)</span>
@@ -463,12 +466,22 @@ $`6`
 </section>
 <section id="cell-type-annotation" class="level2">
 <h2 class="anchored" data-anchor-id="cell-type-annotation">Cell Type Annotation</h2>
+<p>Clusters were annotated as follows:</p>
+<ul>
+<li>Cluster 1: B cells</li>
+<li>Cluster 2: Fibroblasts (could be actually tumour)</li>
+<li>Clusters 3 and 6: Tumour Core</li>
+<li>Cluster 4: Tumour Edge</li>
+<li>Cluster 5: T cells (could be + fibroblasts)</li>
+</ul>
+<p>Cluster 1 is linked to IGHG1 and IGHG4, which are typical of B cells. Cluster 2 is associated with fibronectin (FN1), a component of the extracellular matrix, actin (ACTA2) and kinesin (KIF23), essential for intracellular motility, the histocompatibility complex class B (HLA-B). Cluster 6 is related to KRT18 and KRT19, which are typical of tumour cells. Cluster 4 is connected to CD24 and FOS, two known oncogenes, but also lyzozome (LYZ) produced by macrophages to lyse cells. Thus we labelled cluster 4 as the tumour core, as it might represent the boarder regions between the the immune response and the tumour. Cluster 5 is characterised by FOXP3, a T cell marker gene, but also by SULF1, expressed by fibroblasts. Thus, this cluster might constitute a hybrid between T cells and fibroblasts.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Infer cell type manually</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>cell.types <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"B cell"</span>, <span class="st">"Fibroblast"</span>, <span class="st">"Tumour Core"</span>, <span class="st">"Tumour Edge"</span>, <span class="st">"T cell"</span>, <span class="st">"Tumour Core"</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Store cell type</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>CellType <span class="ot">&lt;-</span> <span class="fu">sapply</span>(sce<span class="sc">$</span>Cluster, <span class="cf">function</span>(x) cell.types[x])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The annotated cells are shown both as clusters in the UMAP space and in their original space of the tissue in <a href="#fig-umap-spatial">Figure&nbsp;6</a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate UMAP plot</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>umap <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce, <span class="st">"UMAP"</span>, <span class="at">colour_by =</span> <span class="st">"CellType"</span>, <span class="at">text_by =</span> <span class="st">"Cluster"</span>)</span>
@@ -487,7 +500,6 @@ $`6`
 </div>
 </div>
 </div>
-<p>Cluster 4 has cd24 but also lyz so it might be the battlefield where tumour and macrophages meet.</p>
 </section>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
