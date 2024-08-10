@@ -8,7 +8,7 @@
 
 <meta name="author" content="Dolev Michaelovich">
 <meta name="author" content="Giulio Benedetti">
-<meta name="dcterms.date" content="2024-07-30">
+<meta name="dcterms.date" content="2024-08-10">
 
 <title>Breast Cancer Analysis</title>
 <style>
@@ -130,7 +130,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 30, 2024</p>
+      <p class="date">August 10, 2024</p>
     </div>
   </div>
   
@@ -364,17 +364,18 @@ altExpNames(0):</code></pre>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cluster cells</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>kclust <span class="ot">&lt;-</span> <span class="fu">clusterCells</span>(sce,</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">use.dimred =</span> <span class="st">"PCA"</span>,</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">BLUSPARAM =</span> <span class="fu">TwoStepParam</span>(<span class="at">first =</span> <span class="fu">KmeansParam</span>(<span class="at">centers =</span> <span class="dv">1000</span>),</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">second =</span> <span class="fu">NNGraphParam</span>(<span class="at">k =</span> <span class="dv">10</span>)),</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Store clustering results</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>Cluster <span class="ot">&lt;-</span> kclust<span class="sc">$</span>cluster</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co"># View cluster counts</span></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(sce<span class="sc">$</span>Cluster)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(tab, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Cluster"</span>, <span class="st">"Count"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>                       <span class="co"># assay.type = "logcounts",</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">use.dimred =</span> <span class="st">"PCA"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">BLUSPARAM =</span> <span class="fu">TwoStepParam</span>(<span class="at">first =</span> <span class="fu">KmeansParam</span>(<span class="at">centers =</span> <span class="dv">1000</span>),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                                                <span class="at">second =</span> <span class="fu">NNGraphParam</span>(<span class="at">k =</span> <span class="dv">10</span>)),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Store clustering results</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>sce<span class="sc">$</span>Cluster <span class="ot">&lt;-</span> kclust<span class="sc">$</span>cluster</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># View cluster counts</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">table</span>(sce<span class="sc">$</span>Cluster)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(tab, <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Cluster"</span>, <span class="st">"Count"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <thead>
@@ -469,12 +470,12 @@ $`6`
 <p>Clusters were annotated as follows:</p>
 <ul>
 <li>Cluster 1: B cells</li>
-<li>Cluster 2: Fibroblasts (could be actually tumour)</li>
+<li>Cluster 2: Fibroblasts</li>
 <li>Clusters 3 and 6: Tumour Core</li>
 <li>Cluster 4: Tumour Edge</li>
-<li>Cluster 5: T cells (could be + fibroblasts)</li>
+<li>Cluster 5: T cells with traces of fibroblasts</li>
 </ul>
-<p>Cluster 1 is linked to IGHG1 and IGHG4, which are typical of B cells. Cluster 2 is associated with fibronectin (FN1), a component of the extracellular matrix, actin (ACTA2) and kinesin (KIF23), essential for intracellular motility, the histocompatibility complex class B (HLA-B). Cluster 6 is related to KRT18 and KRT19, which are typical of tumour cells. Cluster 4 is connected to CD24 and FOS, two known oncogenes, but also lyzozome (LYZ) produced by macrophages to lyse cells. Thus we labelled cluster 4 as the tumour core, as it might represent the boarder regions between the the immune response and the tumour. Cluster 5 is characterised by FOXP3, a T cell marker gene, but also by SULF1, expressed by fibroblasts. Thus, this cluster might constitute a hybrid between T cells and fibroblasts.</p>
+<p>Cluster 1 is linked to IGHG1 and IGHG4, which are typical of B cells. Cluster 2 represents fibroblasts, as it is associated with fibronectin (FN1), a component of the extracellular matrix, actin (ACTA2) and kinesin (KIF23), essential for intracellular motility, the histocompatibility complex class B (HLA-B). Clusters 3 and 6 are related to KRT18 and KRT19, which are typical of tumour cells. Cluster 4 is connected to CD24 and FOS, two known oncogenes, but also lysozyme (LYZ) produced by macrophages to lyse cells. Thus we labelled cluster 4 as the tumour core, as it might reflect the boarder regions between the the immune response and the tumour. Cluster 5 is characterised by FOXP3, a T cell marker gene, but also by SULF1, expressed by fibroblasts. Thus, this cluster might constitute a hybrid between T cells and fibroblasts.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Infer cell type manually</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>cell.types <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"B cell"</span>, <span class="st">"Fibroblast"</span>, <span class="st">"Tumour Core"</span>, <span class="st">"Tumour Edge"</span>, <span class="st">"T cell"</span>, <span class="st">"Tumour Core"</span>)</span>

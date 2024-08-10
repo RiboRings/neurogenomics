@@ -8,9 +8,12 @@ author:
   - Giulio Benedetti
 ---
 
-This analysis aims at predicting whether checkpoint inhibition therapy should
-be administered to a breast cancer patient based on their genetic expression
-profile.
+```{r}
+#| include: false
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This analysis aims at predicting whether checkpoint inhibition therapy should be administered to a breast cancer patient based on their genetic expression profile.
 
 ## Data Preparation
 
@@ -40,8 +43,7 @@ expression_data <- read.csv("data/assay.csv", row.names = 1) |>
 location_data <- read.csv("data/location.csv", row.names = 1)
 ```
 
-A `SingleCellExperiment` object is constructed from the assay and its
-corresponding colData.
+A `SingleCellExperiment` object is constructed from the assay and its corresponding colData.
 
 ```{r}
 # Build SCE object
@@ -55,8 +57,7 @@ The experiment includes `r ncol(sce)` cells which express `r nrow(sce)` genes.
 
 ## Normalisation
 
-The counts assay is normalised with the log-norm transformation to make cells
-comparable and focus on logarithmic changes in expression.
+The counts assay is normalised with the log-norm transformation to make cells comparable and focus on logarithmic changes in expression.
 
 ```{r}
 set.seed(100)
@@ -71,8 +72,7 @@ sce <- logNormCounts(sce)
 
 ## Feature Selection
 
-Cells are modelled by their variability to determine whether a few Highly
-Variable Genes (HVGs) could be selected to represent cells.
+Cells are modelled by their variability to determine whether a few Highly Variable Genes (HVGs) could be selected to represent cells.
 
 ```{r}
 # Model gene variation
@@ -80,11 +80,7 @@ dec <- modelGeneVar(sce)
 fit <- metadata(dec)
 ```
 
-There are a few genes that show much greater variability than others
-(@fig-model). In particular, genes above the red line provide a certain extent
-of biological variance after excluding technical variance (red line). However,
-we decided to keep all of them in further analyses due to the relatively small
-size of the experiment, which might have been pre-filtered.
+There are a few genes that show much greater variability than others (@fig-model). In particular, genes above the red line provide a certain extent of biological variance after excluding technical variance (red line). However, we decided to keep all of them in further analyses due to the relatively small size of the experiment, which might have been pre-filtered.
 
 ```{r}
 #| label: fig-model
@@ -99,9 +95,7 @@ plot(fit$mean, fit$var,
 curve(fit$trend(x), col = "red", add = TRUE, lwd = 2)
 ```
 
-Genes are sorted by their variability to explore which genes might be used later
-to annotate clusters to the correct cell types. The first two, IGHG1 and IGHG4
-represent B cell marker genes.
+Genes are sorted by their variability to explore which genes might be used later to annotate clusters to the correct cell types. The first two, IGHG1 and IGHG4 represent B cell marker genes.
 
 ```{r}
 # Order genes by variability
@@ -111,9 +105,7 @@ hvg
 
 ## Dimensionality Reduction
 
-Currently, cells are characterised by a large number of dimensions
-(`r nrow(sce)` genes). To select highly explanatory features and reduce noise,
-we perform Principal Component Analysis (PCA) on the assay.
+Currently, cells are characterised by a large number of dimensions (`r nrow(sce)` genes). To select highly explanatory features and reduce noise, we perform Principal Component Analysis (PCA) on the assay.
 
 ```{r}
 # Perform PCA
@@ -131,10 +123,7 @@ chosen.elbow <- findElbowPoint(pca.vars)
 pca.cum.vars <- cumsum(pca.vars)
 ```
 
-The number of PCs for further analyses was determined by the percentage of
-explained variance in relation to the number of PCs (@fig-pcomp). The first 7
-PCs seem sufficient based on the elbow rule, whereas the first 9 PCs can explain more than 40% of the variance based on cumulative explained variance. Therefore, we reasoned that the first 10 PCs would provide an acceptable tradeoff between
-dimensionality and explained variance.
+The number of PCs for further analyses was determined by the percentage of explained variance in relation to the number of PCs (@fig-pcomp). The first 7 PCs seem sufficient based on the elbow rule, whereas the first 9 PCs can explain more than 40% of the variance based on cumulative explained variance. Therefore, we reasoned that the first 10 PCs would provide an acceptable tradeoff between dimensionality and explained variance.
 
 ```{r}
 #| label: fig-pcomp
@@ -158,9 +147,7 @@ abline(h = 40, col="red", lty = 2)
 grid()
 ```
 
-For exploratory purposes, the most expressed gene in every cell was found. Cells
-whose most expressed gene was different from the top 5 genes across the entire
-assay were labelled as "Other".
+For exploratory purposes, the most expressed gene in every cell was found. Cells whose most expressed gene was different from the top 5 genes across the entire assay were labelled as "Other".
 
 ```{r}
 # Find top expressed gene for every cell
@@ -175,11 +162,7 @@ max.genes[!(max.genes %in% top.genes)] <- "Other"
 sce$TopGene <- max.genes
 ```
 
-The performance of PCA was roughly assessed by visualising the cells in the
-first four PCs coloured by their most expressed gene (@fig-pca). The first PC
-seems to encode most of the variance between IGHG1/IGHG4+ cells and other cells
-in terms of most expressed gene, whereas higher PCs might encode different
-information.
+The performance of PCA was roughly assessed by visualising the cells in the first four PCs coloured by their most expressed gene (@fig-pca). The first PC seems to encode most of the variance between IGHG1/IGHG4+ cells and other cells in terms of most expressed gene, whereas higher PCs might encode different information.
 
 ```{r}
 #| label: fig-pca
@@ -191,8 +174,7 @@ plotReducedDim(sce, "PCA",
                colour_by = "TopGene")
 ```
 
-The first 10 PCs are fed to TSNE and UMAP to further identify groups of cells
-and their relative position.
+The first 10 PCs are fed to TSNE and UMAP to further identify groups of cells and their relative position.
 
 ```{r}
 set.seed(100)
@@ -203,11 +185,7 @@ sce <- runTSNE(sce, dimred = "PCA", n_dimred = 10)
 sce <- runUMAP(sce, dimred = "PCA", n_dimred = 10)
 ```
 
-Both TSNE and UMAP could identify the IGHG1/IGHG4+ group of cells previously
-found in PCA (@fig-ord). This is encoded by the second axis in TSNE and the
-first axis in UMAP, respectively. Compared to PCA, TSNE and UMAP provided a
-better separation between other groups of cells, such as the HIF1A+, LYZ and
-other cells.
+Both TSNE and UMAP could identify the IGHG1/IGHG4+ group of cells previously found in PCA (@fig-ord). This is encoded by the second axis in TSNE and the first axis in UMAP, respectively. Compared to PCA, TSNE and UMAP provided a better separation between other groups of cells, such as the HIF1A+, LYZ and other cells.
 
 ```{r}
 #| label: fig-ord
@@ -228,19 +206,14 @@ tsne + umap +
 
 ## Clustering
 
-Groups of cells with similar expression profiles can be found by clustering.
-Then, they can be annotated with the most appropriate cell type based on which
-marker genes they express. Cells were clustered based on the first PCs with a
-two-step approach involving K-means and network-graph algorithms. The former
-serves to speed up clustering by finding the initial 1000 centers, while the
-latter aims to merge and refine the cells to a maximum of 10 clusters. As a
-result, we obtain 6 clusters of variable size from about 200 to 800 cells.
+Groups of cells with similar expression profiles can be found by clustering. Then, they can be annotated with the most appropriate cell type based on which marker genes they express. Cells were clustered based on the first PCs with a two-step approach involving K-means and network-graph algorithms. The former serves to speed up clustering by finding the initial 1000 centers, while the latter aims to merge and refine the cells to a maximum of 10 clusters. As a result, we obtain 6 clusters of variable size from about 200 to 800 cells.
 
 ```{r}
 set.seed(100)
 
 # Cluster cells
 kclust <- clusterCells(sce,
+                       # assay.type = "logcounts",
                        use.dimred = "PCA",
                        BLUSPARAM = TwoStepParam(first = KmeansParam(centers = 1000),
                                                 second = NNGraphParam(k = 10)),
@@ -254,10 +227,7 @@ tab <- table(sce$Cluster)
 knitr::kable(tab, col.names = c("Cluster", "Count"))
 ```
 
-The six clusters span different regions of the UMAP space (@fig-umap). Some of
-the clusters, especially cluster 1, match the groups previously defined by
-most expressed gene. However, it is clear that more complex information is
-encoded by the clustering than by top gene stratification.
+The six clusters span different regions of the UMAP space (@fig-umap). Some of the clusters, especially cluster 1, match the groups previously defined by most expressed gene. However, it is clear that more complex information is encoded by the clustering than by top gene stratification.
 
 ```{r}
 #| label: fig-umap
@@ -273,11 +243,7 @@ plotReducedDim(sce, "UMAP",
 
 ## Marker Gene Detection
 
-Marker genes are detected by pairwise comparisons of gene expression between
-clusters. Then, the average effect sizes across all comparisons are computed
-with several scores. Here, we use the mean AUC as an estimate to assess the
-importance of a marker gene for each cluster. For simplicity, only the top
-5 marker genes in terms of mean AUC were considered for every cluster.
+Marker genes are detected by pairwise comparisons of gene expression between clusters. Then, the average effect sizes across all comparisons are computed with several scores. Here, we use the mean AUC as an estimate to assess the importance of a marker gene for each cluster. For simplicity, only the top 5 marker genes in terms of mean AUC were considered for every cluster.
 
 ```{r}
 # Score marker genes by cluster
@@ -297,23 +263,23 @@ marker.genes
 
 Clusters were annotated as follows:
 
-- Cluster 1: B cells
-- Cluster 2: Fibroblasts (could be actually tumour)
-- Clusters 3 and 6: Tumour Core
-- Cluster 4: Tumour Edge
-- Cluster 5: T cells (could be + fibroblasts)
+-   Cluster 1: B cells
+-   Cluster 2: Fibroblasts
+-   Clusters 3 and 6: Tumour Core
+-   Cluster 4: Tumour Edge
+-   Cluster 5: T cells with traces of fibroblasts
 
 Cluster 1 is linked to IGHG1 and IGHG4, which are typical of B cells. Cluster 2
-is associated with fibronectin (FN1), a component of the extracellular matrix,
-actin (ACTA2) and kinesin (KIF23), essential for intracellular motility, the
-histocompatibility complex class B (HLA-B). Cluster 6 is related to KRT18 and
-KRT19, which are typical of tumour cells. Cluster 4 is connected to CD24 and
-FOS, two known oncogenes, but also lyzozome (LYZ) produced by macrophages to
-lyse cells. Thus we labelled cluster 4 as the tumour core, as it might represent
-the boarder regions between the the immune response and the tumour. Cluster 5
-is characterised by FOXP3, a T cell marker gene, but also by SULF1, expressed
-by fibroblasts. Thus, this cluster might constitute a hybrid between T cells and
-fibroblasts.
+represents fibroblasts, as it is associated with fibronectin (FN1), a component
+of the extracellular matrix, actin (ACTA2) and kinesin (KIF23), essential for
+intracellular motility, the histocompatibility complex class B (HLA-B). Clusters
+3 and 6 are related to KRT18 and KRT19, which are typical of tumour cells.
+Cluster 4 is connected to CD24 and FOS, two known oncogenes, but also lysozyme
+(LYZ) produced by macrophages to lyse cells. Thus we labelled cluster 4 as the
+tumour core, as it might reflect the boarder regions between the the immune
+response and the tumour. Cluster 5 is characterised by FOXP3, a T cell marker
+gene, but also by SULF1, expressed by fibroblasts. Thus, this cluster might
+constitute a hybrid between T cells and fibroblasts.
 
 ```{r}
 # Infer cell type manually
@@ -322,8 +288,7 @@ cell.types <- c("B cell", "Fibroblast", "Tumour Core", "Tumour Edge", "T cell", 
 sce$CellType <- sapply(sce$Cluster, function(x) cell.types[x])
 ```
 
-The annotated cells are shown both as clusters in the UMAP space and in their
-original space of the tissue in @fig-umap-spatial.
+The annotated cells are shown both as clusters in the UMAP space and in their original space of the tissue in @fig-umap-spatial.
 
 ```{r}
 #| label: fig-umap-spatial
